@@ -1,0 +1,45 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 083d167f33b54b57a4530ffd75bd1caa, type: 3}
+  m_Name: GlobalServiceRegistry
+  m_EditorClassIdentifier: 
+  parentRegistry: {fileID: 0}
+  services:
+  - serviceName: MusicService
+    interfaceType:
+      typeName: 
+    implementationType:
+      typeName: Nexus.Audio.MusicService, LiteNinja.NEXUS, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    lifetime: 0
+    monoBehaviourPrefab: {fileID: 0}
+    configuration: {fileID: 11400000, guid: 33e20ff8cb04c4553a13f69ea7e52767, type: 2}
+  - serviceName: AudioService
+    interfaceType:
+      typeName: Nexus.Audio.ISoundService, LiteNinja.NEXUS, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    implementationType:
+      typeName: Nexus.Audio.SoundService, LiteNinja.NEXUS, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    lifetime: 0
+    monoBehaviourPrefab: {fileID: 0}
+    configuration: {fileID: 11400000, guid: 5a88165f0fcd34053b6fcf3ab1e03c2f, type: 2}
+  - serviceName: PoolingService
+    interfaceType:
+      typeName: Nexus.Pooling.IPoolingService, LiteNinja.NEXUS, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    implementationType:
+      typeName: Nexus.Pooling.PoolingService, LiteNinja.NEXUS, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    lifetime: 0
+    monoBehaviourPrefab: {fileID: 0}
+    configuration: {fileID: 11400000, guid: 2e7f5828070214e5f84b4f7b3d218922, type: 2}

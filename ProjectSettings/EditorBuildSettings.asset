@@ -6,6 +6,12 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/SampleScene.unity
+    path: Assets/Galacron/Scenes/Bootstrap.unity
     guid: 8c9cfa26abfee488c85f1582747f6a02
+  - enabled: 1
+    path: Assets/Galacron/Scenes/MainMenu.unity
+    guid: e31540aa464f84286beb05d8b1bd72ad
+  - enabled: 1
+    path: Assets/Galacron/Scenes/Game.unity
+    guid: 59abf35801fc44563b277a9b509f819b
   m_configObjects: {}

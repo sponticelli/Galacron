@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f7808c2d576044e5a4b63e3f6c564fbb, type: 3}
+  m_Name: MusicServiceConfig
+  m_EditorClassIdentifier: 
+  defaultVolume: 0.7
+  defaultFadeDuration: 2
+  quickFadeDuration: 0.3
+  mixerGroup: {fileID: 8545111529842500784, guid: a4d584054a8804bd498de8ab580f696b, type: 2}
+  volumeParameter: MusicVolume
+  audioSourceCount: 2
+  defaultPlaylist: {fileID: 11400000, guid: 4d153ef0a3a1c44bea5f064219306d8d, type: 2}
+  rememberLastTrack: 1
+  autoResumeOnFocus: 1
+  pauseOnFocusLost: 1
+  maxHistorySize: 10
+  logDebugMessages: 0
+  enableDebugLogging: 1
