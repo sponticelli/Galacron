@@ -16,7 +16,7 @@ namespace Galacron.PostProcessors
                 importer.spritePixelsPerUnit = 16;
                 importer.mipmapEnabled = false;
                 importer.textureType = TextureImporterType.Sprite;
-                importer.spriteImportMode = SpriteImportMode.Single;
+                //importer.spriteImportMode = SpriteImportMode.Single;
             }
         }
     }
