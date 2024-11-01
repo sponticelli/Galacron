@@ -14,16 +14,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   parentRegistry: {fileID: 0}
   services:
-  - serviceName: MusicService
+  - serviceName: SoundService
     interfaceType:
-      typeName: 
+      typeName: Nexus.Audio.IMusicService, LiteNinja.NEXUS, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
     implementationType:
       typeName: Nexus.Audio.MusicService, LiteNinja.NEXUS, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
     lifetime: 0
     monoBehaviourPrefab: {fileID: 0}
     configuration: {fileID: 11400000, guid: 33e20ff8cb04c4553a13f69ea7e52767, type: 2}
-  - serviceName: AudioService
+  - serviceName: SoundService
     interfaceType:
       typeName: Nexus.Audio.ISoundService, LiteNinja.NEXUS, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null

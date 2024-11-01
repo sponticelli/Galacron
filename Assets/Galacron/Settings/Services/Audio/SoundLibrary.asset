@@ -12,4 +12,290 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f57cc3c15b294b9c8a9842d3ca404dd2, type: 3}
   m_Name: SoundLibrary
   m_EditorClassIdentifier: 
-  sounds: []
+  sounds:
+  - id: 62824717-c3ce-4843-9cbd-fd740b78ea3a
+    displayName: Click 01
+    clip: {fileID: 8300000, guid: 11968a7f9843c433ba02d592116f9eff, type: 3}
+    type: 0
+    defaultVolume: 1
+    pitchMin: 0.8
+    pitchMax: 1
+    randomizePitch: 1
+    spatialize: 0
+    maxDistance: 100
+    minDistance: 1
+    tags:
+    - click
+  - id: 93fbe6ad-1a72-4abe-afea-4ccb41c59d71
+    displayName: Click 02
+    clip: {fileID: 8300000, guid: c91ba5ff26c994a1aaa442a08b7cb712, type: 3}
+    type: 0
+    defaultVolume: 1
+    pitchMin: 0.8
+    pitchMax: 1
+    randomizePitch: 1
+    spatialize: 0
+    maxDistance: 100
+    minDistance: 1
+    tags:
+    - click
+  - id: 9d86e077-7078-4ab6-bf80-450e2a6a44b0
+    displayName: Click 03
+    clip: {fileID: 8300000, guid: 0300b1616598041489e1e89a3940ff0e, type: 3}
+    type: 0
+    defaultVolume: 1
+    pitchMin: 0.8
+    pitchMax: 1
+    randomizePitch: 1
+    spatialize: 0
+    maxDistance: 100
+    minDistance: 1
+    tags:
+    - click
+  - id: 4253baea-b841-4d11-ba88-8d1462e44423
+    displayName: Click 04
+    clip: {fileID: 8300000, guid: f768a1f07ce34430a833cf702de22a6b, type: 3}
+    type: 0
+    defaultVolume: 1
+    pitchMin: 0.8
+    pitchMax: 1
+    randomizePitch: 1
+    spatialize: 0
+    maxDistance: 100
+    minDistance: 1
+    tags:
+    - click
+  - id: a060544b-1bee-4658-b3fe-6e9556c991d1
+    displayName: Click 05
+    clip: {fileID: 8300000, guid: 9c643bab5e3064598a939db97cab8b42, type: 3}
+    type: 0
+    defaultVolume: 1
+    pitchMin: 0.8
+    pitchMax: 1
+    randomizePitch: 1
+    spatialize: 0
+    maxDistance: 100
+    minDistance: 1
+    tags:
+    - click
+  - id: c921facb-7d13-469c-b7a8-53093ecb414e
+    displayName: Explosion 01
+    clip: {fileID: 8300000, guid: 79e9873473ea24083bf65a689e81bfe9, type: 3}
+    type: 1
+    defaultVolume: 1
+    pitchMin: 0.8
+    pitchMax: 1
+    randomizePitch: 1
+    spatialize: 0
+    maxDistance: 100
+    minDistance: 1
+    tags:
+    - explosion
+  - id: 68aea87f-b826-46f7-b376-e951f8652ced
+    displayName: Explosion 02
+    clip: {fileID: 8300000, guid: 24fd01ee457f143e2b40be7ba26d1f06, type: 3}
+    type: 1
+    defaultVolume: 1
+    pitchMin: 0.8
+    pitchMax: 1
+    randomizePitch: 1
+    spatialize: 0
+    maxDistance: 100
+    minDistance: 1
+    tags:
+    - explosion
+  - id: 884f8d52-0ded-49a6-9635-0864b7b20f16
+    displayName: Explosion 03
+    clip: {fileID: 8300000, guid: 42b8111cd5a534365818e87ca9162881, type: 3}
+    type: 1
+    defaultVolume: 1
+    pitchMin: 0.8
+    pitchMax: 1
+    randomizePitch: 1
+    spatialize: 0
+    maxDistance: 100
+    minDistance: 1
+    tags:
+    - explosion
+  - id: 9e192d8a-f3ca-483b-ae55-93943398cc2b
+    displayName: Explosion 04
+    clip: {fileID: 8300000, guid: fac6a4081db6a42f7a99d7cb06564379, type: 3}
+    type: 1
+    defaultVolume: 1
+    pitchMin: 0.8
+    pitchMax: 1
+    randomizePitch: 1
+    spatialize: 0
+    maxDistance: 100
+    minDistance: 1
+    tags:
+    - explosion
+  - id: 9b081be4-dbda-43b3-a7c0-5c362eef2992
+    displayName: Explosion 05
+    clip: {fileID: 8300000, guid: d46218ccc4103429d829c92039b0c9aa, type: 3}
+    type: 1
+    defaultVolume: 1
+    pitchMin: 0.8
+    pitchMax: 1
+    randomizePitch: 1
+    spatialize: 0
+    maxDistance: 100
+    minDistance: 1
+    tags:
+    - explosion
+  - id: 6fb3ce71-80f1-49ee-a14a-be06f438d6a3
+    displayName: Explosion 06
+    clip: {fileID: 8300000, guid: 4efce9cf7d79d41b599509f99ec0f07d, type: 3}
+    type: 1
+    defaultVolume: 1
+    pitchMin: 0.8
+    pitchMax: 1
+    randomizePitch: 1
+    spatialize: 0
+    maxDistance: 100
+    minDistance: 1
+    tags:
+    - explosion
+  - id: 7e405487-3176-43ca-80c1-fb4e5991ba14
+    displayName: Hit 01
+    clip: {fileID: 8300000, guid: 6d364527b2a95471595365bcfd71b8f7, type: 3}
+    type: 1
+    defaultVolume: 1
+    pitchMin: 0.8
+    pitchMax: 1
+    randomizePitch: 1
+    spatialize: 0
+    maxDistance: 100
+    minDistance: 1
+    tags:
+    - hit
+  - id: 98cceb83-2a29-4a56-b624-e66cf07a1cc0
+    displayName: Hit 02
+    clip: {fileID: 8300000, guid: b203369797132454d9d0a3fe8beed011, type: 3}
+    type: 1
+    defaultVolume: 1
+    pitchMin: 0.8
+    pitchMax: 1
+    randomizePitch: 1
+    spatialize: 0
+    maxDistance: 100
+    minDistance: 1
+    tags:
+    - hit
+  - id: 8567ca0d-9e6c-4e7b-8a4d-540ad814b0f4
+    displayName: Hit 03
+    clip: {fileID: 8300000, guid: 3939bf5a2b33e45c8b86a9fc941b1df7, type: 3}
+    type: 1
+    defaultVolume: 1
+    pitchMin: 0.8
+    pitchMax: 1
+    randomizePitch: 1
+    spatialize: 0
+    maxDistance: 100
+    minDistance: 1
+    tags:
+    - hit
+  - id: b783a462-8136-48dd-9b54-d5a8a95c4ff5
+    displayName: Hit 04
+    clip: {fileID: 8300000, guid: ae082b3b3a6904b129c83461b8015469, type: 3}
+    type: 1
+    defaultVolume: 1
+    pitchMin: 0.8
+    pitchMax: 1
+    randomizePitch: 1
+    spatialize: 0
+    maxDistance: 100
+    minDistance: 1
+    tags:
+    - hit
+  - id: 4115ac7e-ca17-4305-bd5b-8a78a514528b
+    displayName: Hit 05
+    clip: {fileID: 8300000, guid: 647ac06974f52413f9355d3d2db01f35, type: 3}
+    type: 1
+    defaultVolume: 1
+    pitchMin: 0.8
+    pitchMax: 1
+    randomizePitch: 1
+    spatialize: 0
+    maxDistance: 100
+    minDistance: 1
+    tags:
+    - hit
+  - id: c29e2cd7-e65b-4ae2-a70f-7b396f07b760
+    displayName: Hit 06
+    clip: {fileID: 8300000, guid: 183d04b5b4c1342e1a62a65fcf155bdf, type: 3}
+    type: 1
+    defaultVolume: 1
+    pitchMin: 0.8
+    pitchMax: 1
+    randomizePitch: 1
+    spatialize: 0
+    maxDistance: 100
+    minDistance: 1
+    tags:
+    - hit
+  - id: 787e10b6-340a-4a57-a66c-5e573a73f443
+    displayName: Shoot 01
+    clip: {fileID: 8300000, guid: c9c6432ea7b534befbb947267cdb6f22, type: 3}
+    type: 1
+    defaultVolume: 1
+    pitchMin: 0.8
+    pitchMax: 1
+    randomizePitch: 1
+    spatialize: 0
+    maxDistance: 100
+    minDistance: 1
+    tags:
+    - shoot
+  - id: 15641dc5-2aa6-4d06-b2bc-b8496350c9d0
+    displayName: Shoot 02
+    clip: {fileID: 8300000, guid: 0af7c50e3096b42f282c3f4a2a9a432a, type: 3}
+    type: 1
+    defaultVolume: 1
+    pitchMin: 0.8
+    pitchMax: 1
+    randomizePitch: 1
+    spatialize: 0
+    maxDistance: 100
+    minDistance: 1
+    tags:
+    - shoot
+  - id: 61aa7d09-54b0-4b03-87c9-64e830006da4
+    displayName: Shoot 03
+    clip: {fileID: 8300000, guid: 68769cba94d1443a2a6288bf8fad1b98, type: 3}
+    type: 1
+    defaultVolume: 1
+    pitchMin: 0.8
+    pitchMax: 1
+    randomizePitch: 1
+    spatialize: 0
+    maxDistance: 100
+    minDistance: 1
+    tags:
+    - shoot
+  - id: e8ea3aae-45e5-4447-a6c2-ab694218ebc3
+    displayName: Shoot 04
+    clip: {fileID: 8300000, guid: 97370ec14ada94487bd070fda2b0d9e6, type: 3}
+    type: 1
+    defaultVolume: 1
+    pitchMin: 0.8
+    pitchMax: 1
+    randomizePitch: 1
+    spatialize: 0
+    maxDistance: 100
+    minDistance: 1
+    tags:
+    - shoot
+  - id: 8956cbfb-9365-40bc-93af-7497a918bf94
+    displayName: Shoot 05
+    clip: {fileID: 8300000, guid: 8db071cd119a643cda390fe08dc40dee, type: 3}
+    type: 1
+    defaultVolume: 1
+    pitchMin: 0.8
+    pitchMax: 1
+    randomizePitch: 1
+    spatialize: 0
+    maxDistance: 100
+    minDistance: 1
+    tags:
+    - shoot

@@ -12,7 +12,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: faadb9ec026d4714a99e8f887e127d21, type: 3}
   m_Name: MusicPlaylist
   m_EditorClassIdentifier: 
-  tracks: []
-  shuffleOnStart: 0
+  tracks:
+  - id: music01
+    displayName: game_loop_10
+    clip: {fileID: 8300000, guid: c0efd26c472194d07821e03db12bcb36, type: 3}
+    volumeMultiplier: 1
+    description: 
+    tags: []
+  - id: music02
+    displayName: game_loop_11
+    clip: {fileID: 8300000, guid: a20b9b70f08da4f7c9fef078c7f647f0, type: 3}
+    volumeMultiplier: 1
+    description: 
+    tags: []
+  - id: music03
+    displayName: game_loop_12
+    clip: {fileID: 8300000, guid: 96aaaf8c38b2a4c5ba2958fc3ce620ef, type: 3}
+    volumeMultiplier: 1
+    description: 
+    tags: []
+  - id: music04
+    displayName: game_loop_13
+    clip: {fileID: 8300000, guid: 4d099d80229db4663a84e438c6e4bf56, type: 3}
+    volumeMultiplier: 1
+    description: 
+    tags: []
+  shuffleOnStart: 1
   loopPlaylist: 1
   autoPlayOnSet: 1
