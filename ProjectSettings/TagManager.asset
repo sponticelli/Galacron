@@ -12,10 +12,10 @@ TagManager:
   - Water
   - UI
   - Post Processing
-  - 
-  - 
-  - 
-  - 
+  - Player
+  - Enemy
+  - Bullet-Player
+  - Bullet-Enemy
   - 
   - 
   - 

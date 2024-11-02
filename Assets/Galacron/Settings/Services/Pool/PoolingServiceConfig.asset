@@ -12,4 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a17ec87ec309445a9a4fc673f8f3ae76, type: 3}
   m_Name: PoolingServiceConfig
   m_EditorClassIdentifier: 
-  poolConfigurations: []
+  poolConfigurations:
+  - id: PlayerBullet
+    prefab: {fileID: 3613037869655021087, guid: 7bf9b40028f094a4f89edba28a7c33d5, type: 3}
+    initialSize: 10
+    maxSize: 100
+    autoExpand: 1
+    recycleTimeout: 0
