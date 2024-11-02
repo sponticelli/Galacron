@@ -14,4 +14,5 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Galacron/Scenes/Game.unity
     guid: 59abf35801fc44563b277a9b509f819b
-  m_configObjects: {}
+  m_configObjects:
+    com.unity.input.settings: {fileID: 11400000, guid: 9afaaa3e8ad964f83a02c38646dc3ade, type: 2}
