@@ -9,7 +9,8 @@ namespace Galacron.Actors
 {
     public class Weapon : MonoBehaviour
     {
-        [Header("Settings")] [SerializeField] private GameObject _bulletPrefab;
+        [Header("Settings")] 
+        [SerializeField] private Pools _bulletPool;
         [SerializeField] private float _weaponDelay = 0.1f;
         [SerializeField] private float _bulletSpeed = 15f;
         [SerializeField] private bool _automaticFire = true;
@@ -23,6 +24,7 @@ namespace Galacron.Actors
         private bool _isShooting;
         private bool _isInitialized;
         private bool _isReloading;
+        private string _bulletPoolId;
 
 
         private async void Start()
@@ -30,6 +32,8 @@ namespace Galacron.Actors
             _poolingService = ServiceLocator.Instance.GetService<IPoolingService>();
             await _poolingService.WaitForInitialization();
             _isInitialized = true;
+            _bulletPoolId = PoolIdConverter.GetId(_bulletPool);
+            Debug.Log("Weapon initialized with pool id: " + _bulletPoolId);
         }
 
         private void Update()
@@ -61,7 +65,7 @@ namespace Galacron.Actors
 
         private void ShootBullet()
         {
-            var bulletGO = _poolingService.GetFromPool(_bulletPrefab, transform.position, Quaternion.identity);
+            var bulletGO = _poolingService.GetFromPool(_bulletPoolId, transform.position, Quaternion.identity);
             var bullet = bulletGO.GetComponent<BulletBase>();
             bullet.Velocity = transform.up * _bulletSpeed;
         }
