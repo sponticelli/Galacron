@@ -6,7 +6,7 @@ namespace Galacron.Actions
 {
     public class PlaySound : MonoBehaviour
     {
-        [SerializeField] private Sounds _sound;
+       [SerializeField] private Sounds _sound;
         
         private ISoundService _soundService;
         private bool _isInitialized;

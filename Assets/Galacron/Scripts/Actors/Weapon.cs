@@ -13,6 +13,7 @@ namespace Galacron.Actors
         [SerializeField] private float _weaponDelay = 0.1f;
         [SerializeField] private float _bulletSpeed = 15f;
         [SerializeField] private bool _automaticFire = true;
+        [SerializeField] private bool _stopDelayOnRelease = true;
 
 
         [Header("Events")] [SerializeField] private UnityEvent onShoot = null!;
@@ -51,6 +52,11 @@ namespace Galacron.Actors
         {
             if (!_isInitialized) return;
             _isShooting = false;
+            
+            if (!_stopDelayOnRelease) return;
+            
+            _isReloading = false;
+            StopAllCoroutines();
         }
 
         private void ShootBullet()
