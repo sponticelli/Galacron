@@ -19,3 +19,9 @@ MonoBehaviour:
     maxSize: 100
     autoExpand: 1
     recycleTimeout: 0
+  - id: Enemy Dragonfly
+    prefab: {fileID: 8919466910797882397, guid: 3c6b5fea417a24b45a8f4c068195607d, type: 3}
+    initialSize: 10
+    maxSize: 100
+    autoExpand: 1
+    recycleTimeout: -1
