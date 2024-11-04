@@ -25,3 +25,9 @@ MonoBehaviour:
     maxSize: 100
     autoExpand: 1
     recycleTimeout: -1
+  - id: FireflyBullet
+    prefab: {fileID: 3613037869655021087, guid: b5e1507029ee0412c90dbaa06f7cb30a, type: 3}
+    initialSize: 10
+    maxSize: 100
+    autoExpand: 1
+    recycleTimeout: -1

@@ -5,15 +5,21 @@ namespace Galacron
 {
     public enum Pools
     {
+        ENEMY_DRAGONFLY,
+        FIREFLYBULLET,
         PLAYERBULLET,
     }
 
     public static class PoolIds
     {
+        public const string ENEMY_DRAGONFLY = "Enemy Dragonfly";
+        public const string FIREFLYBULLET = "FireflyBullet";
         public const string PLAYERBULLET = "PlayerBullet";
 
         private static readonly Dictionary<string, string> _prefabNames = new Dictionary<string, string>
         {
+            { "Enemy Dragonfly", "FireflyEnemy" },
+            { "FireflyBullet", "FireflyBullet" },
             { "PlayerBullet", "PlayerBullet" },
         };
 

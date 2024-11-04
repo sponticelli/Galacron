@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ada7137ab4134dfb8b01934017f4e537, type: 3}
+  m_Name: FireFlyConfig
+  m_EditorClassIdentifier: 
+  moveSpeed: 5
+  rotationSpeed: 180
+  positionSmoothTime: 0.1
+  rotationSmoothTime: 0.1
+  attackDamage: 10
+  attackRange: 2
+  weaponPrefab: {fileID: 1513828662814114362, guid: 603bb391829914825ae6ba1b7ad0fd32, type: 3}

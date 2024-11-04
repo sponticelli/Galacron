@@ -12,12 +12,10 @@ namespace Galacron.Actors
         [SerializeField] private Transform _targetTransform;
 
         private Camera _camera;
-        private PooledObject _pooledObject;
 
         private void Start()
         {
             _camera = Camera.main;
-            _pooledObject = GetComponent<PooledObject>();
         }
 
         private void Update()
@@ -32,14 +30,7 @@ namespace Galacron.Actors
                 _targetTransform.position.y < min.y - _offsetBounds ||
                 _targetTransform.position.y > max.y + _offsetBounds)
             {
-                if (_pooledObject != null)
-                {
-                    _pooledObject.ReturnToPool();
-                }
-                else
-                {
-                    Destroy(gameObject);
-                }
+               gameObject.ReturnToPool();
             }
         }
     }

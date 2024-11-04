@@ -13,4 +13,14 @@ MonoBehaviour:
   m_Name: GameServiceRegistry
   m_EditorClassIdentifier: 
   parentRegistry: {fileID: 11400000, guid: 72e1742aedfa64c00ba13566fc17e5ea, type: 2}
-  services: []
+  services:
+  - serviceName: FormationService
+    interfaceType:
+      typeName: Galacron.Formations.IFormationService, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    implementationType:
+      typeName: Galacron.Formations.FormationService, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    lifetime: 1
+    monoBehaviourPrefab: {fileID: 0}
+    configuration: {fileID: 0}
