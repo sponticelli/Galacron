@@ -13,14 +13,14 @@ MonoBehaviour:
   m_Name: FormationConfig
   m_EditorClassIdentifier: 
   slotPositions:
-  - {x: -4, y: 4}
-  - {x: -2, y: 2}
-  - {x: 2, y: 4}
+  - {x: -3.8996654, y: 4.033445}
+  - {x: -1.9665552, y: 1.9331102}
+  - {x: 2.133779, y: 4.167224}
   - {x: 4, y: 2}
   spacing: 1
   arrivalDelayBetweenMembers: 0.2
-  idleAmplitude: 0.1
-  idleFrequency: 1
+  idleAmplitude: 1.5
+  idleFrequency: 2
   moveSpeed: 5
   rotationSpeed: 180
   attackCooldown: 2
@@ -29,7 +29,7 @@ MonoBehaviour:
   entryPath:
     pathType: 0
     controlPoints: []
-    duration: 1
+    duration: 2
     speedCurve:
       serializedVersion: 2
       m_Curve:
@@ -58,7 +58,7 @@ MonoBehaviour:
   attackPath:
     pathType: 0
     controlPoints: []
-    duration: 1
+    duration: 1.2
     speedCurve:
       serializedVersion: 2
       m_Curve:
