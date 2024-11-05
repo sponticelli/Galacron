@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: FormationConfig
   m_EditorClassIdentifier: 
   slotPositions:
-  - {x: -3.8996654, y: 4.033445}
-  - {x: -1.9665552, y: 1.9331102}
-  - {x: 2.133779, y: 4.167224}
+  - {x: -2, y: 4.5}
+  - {x: -4, y: 2}
+  - {x: 2, y: 4.5}
   - {x: 4, y: 2}
   spacing: 1
   arrivalDelayBetweenMembers: 0.2

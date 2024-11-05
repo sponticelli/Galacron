@@ -26,12 +26,14 @@ namespace Galacron.Formations
         private Texture2D gridTexture;
         private Color[] previewColors = new[] 
         {
-            new Color(1f, 0.3f, 0.3f),
-            new Color(0.3f, 1f, 0.3f),
-            new Color(0.3f, 0.3f, 1f),
-            new Color(1f, 1f, 0.3f),
-            new Color(1f, 0.3f, 1f),
-            new Color(0.3f, 1f, 1f)
+            new Color(1f, 0.3f, 0.3f),   // Red
+            new Color(0.3f, 1f, 0.3f),   // Green
+            new Color(0.3f, 0.3f, 1f),   // Blue
+            new Color(1f, 0.3f, 1f),     // Pink
+            new Color(0.3f, 1f, 1f),     // Cyan
+            new Color(0.6f, 0.6f, 1f),   // Purple
+            new Color(1f, 0.5f, 0.3f),   // Orange
+            new Color(0.5f, 0.6f, 0.3f)    // Dark Green
         };
 
         private const float HandleSize = 0.2f;
@@ -359,7 +361,7 @@ namespace Galacron.Formations
                 float handleSize = HandleUtility.GetHandleSize(position) * HandleSize;
                 bool isSelected = i == selectedSlotIndex;
 
-                Handles.color = isSelected ? Color.yellow : Color.white;
+                Handles.color = isSelected ? Color.yellow : previewColors[i % previewColors.Length];
                 if (Handles.Button(position, Quaternion.identity, handleSize, handleSize, Handles.DotHandleCap))
                 {
                     selectedSlotIndex = i;
