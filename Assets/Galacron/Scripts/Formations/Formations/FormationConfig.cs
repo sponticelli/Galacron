@@ -29,4 +29,6 @@ namespace Galacron.Formations
         public PathConfig attackPath;
         public PathConfig returnPath;
     }
+
+    // IFormationMovement.cs
 }
