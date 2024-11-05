@@ -15,6 +15,15 @@ namespace Galacron.Formations
         private SerializedProperty spacingProperty;
         private SerializedProperty arrivalDelayProperty;
 
+        // Grid Settings
+        private bool showGridSettings = true;
+        private bool enableGrid = true;
+        private float gridSize = 0.5f;
+        private bool showGrid = true;
+        private Color gridColor = new Color(1f, 1f, 1f, 0.2f);
+        private float gridOpacity = 0.2f;
+        private int gridSubdivisions = 2;
+
         // Preview settings
         private bool showPreview = true;
         private Vector2 previewScrollPosition;
@@ -33,7 +42,7 @@ namespace Galacron.Formations
             new Color(0.3f, 1f, 1f),     // Cyan
             new Color(0.6f, 0.6f, 1f),   // Purple
             new Color(1f, 0.5f, 0.3f),   // Orange
-            new Color(0.5f, 0.6f, 0.3f)    // Dark Green
+            new Color(0.5f, 0.6f, 0.3f)    // Olive Green
         };
 
         private const float HandleSize = 0.2f;
@@ -48,6 +57,13 @@ namespace Galacron.Formations
             lastTool = Tools.current;
             CreateGridTexture();
             InitializePreviewStyle();
+
+            // Load grid preferences
+            enableGrid = EditorPrefs.GetBool("FormationConfigEditor_EnableGrid", true);
+            gridSize = EditorPrefs.GetFloat("FormationConfigEditor_GridSize", 0.5f);
+            showGrid = EditorPrefs.GetBool("FormationConfigEditor_ShowGrid", true);
+            gridOpacity = EditorPrefs.GetFloat("FormationConfigEditor_GridOpacity", 0.2f);
+            gridSubdivisions = EditorPrefs.GetInt("FormationConfigEditor_GridSubdivisions", 2);
         }
 
         private void OnDisable()
@@ -57,6 +73,113 @@ namespace Galacron.Formations
             if (gridTexture != null)
             {
                 DestroyImmediate(gridTexture);
+            }
+
+            // Save grid preferences
+            EditorPrefs.SetBool("FormationConfigEditor_EnableGrid", enableGrid);
+            EditorPrefs.SetFloat("FormationConfigEditor_GridSize", gridSize);
+            EditorPrefs.SetBool("FormationConfigEditor_ShowGrid", showGrid);
+            EditorPrefs.SetFloat("FormationConfigEditor_GridOpacity", gridOpacity);
+            EditorPrefs.SetInt("FormationConfigEditor_GridSubdivisions", gridSubdivisions);
+        }
+        
+        private void DrawGridSettings()
+        {
+            EditorGUILayout.BeginVertical(EditorStyles.helpBox);
+            showGridSettings = EditorGUILayout.Foldout(showGridSettings, "Grid Settings", true);
+        
+            if (showGridSettings)
+            {
+                EditorGUI.indentLevel++;
+            
+                enableGrid = EditorGUILayout.Toggle("Enable Snapping", enableGrid);
+                showGrid = EditorGUILayout.Toggle("Show Grid", showGrid);
+            
+                using (new EditorGUI.DisabledScope(!enableGrid))
+                {
+                    gridSize = EditorGUILayout.FloatField("Grid Size", gridSize);
+                    gridSubdivisions = EditorGUILayout.IntSlider("Subdivisions", gridSubdivisions, 1, 4);
+                }
+            
+                using (new EditorGUI.DisabledScope(!showGrid))
+                {
+                    gridOpacity = EditorGUILayout.Slider("Grid Opacity", gridOpacity, 0.1f, 1f);
+                    gridColor = EditorGUILayout.ColorField("Grid Color", gridColor);
+                }
+
+                if (GUILayout.Button("Reset Grid Settings"))
+                {
+                    ResetGridSettings();
+                }
+            
+                EditorGUI.indentLevel--;
+            }
+        
+            EditorGUILayout.EndVertical();
+        }
+        
+        private void ResetGridSettings()
+        {
+            enableGrid = true;
+            gridSize = 0.5f;
+            showGrid = true;
+            gridOpacity = 0.2f;
+            gridSubdivisions = 2;
+            gridColor = new Color(1f, 1f, 1f, 0.2f);
+        }
+        
+        private Vector2 SnapToGrid(Vector2 position)
+        {
+            if (!enableGrid) return position;
+        
+            float subdivisionSize = gridSize / gridSubdivisions;
+            float x = Mathf.Round(position.x / subdivisionSize) * subdivisionSize;
+            float y = Mathf.Round(position.y / subdivisionSize) * subdivisionSize;
+            return new Vector2(x, y);
+        }
+        
+        private void DrawGridGuides(Rect previewArea, Vector2 center)
+        {
+            if (!showGrid) return;
+
+            float effectiveGridSize = gridSize * previewZoom;
+            float subdivSize = effectiveGridSize / gridSubdivisions;
+
+            // Calculate grid bounds
+            float left = center.x - previewArea.width / 2;
+            float right = center.x + previewArea.width / 2;
+            float top = center.y - previewArea.height / 2;
+            float bottom = center.y + previewArea.height / 2;
+
+            Handles.color = new Color(gridColor.r, gridColor.g, gridColor.b, gridColor.a * gridOpacity);
+
+            // Draw main grid lines
+            for (float x = Mathf.Floor(left / effectiveGridSize) * effectiveGridSize; x <= right; x += effectiveGridSize)
+            {
+                Handles.DrawLine(new Vector3(x, top), new Vector3(x, bottom));
+            }
+
+            for (float y = Mathf.Floor(top / effectiveGridSize) * effectiveGridSize; y <= bottom; y += effectiveGridSize)
+            {
+                Handles.DrawLine(new Vector3(left, y), new Vector3(right, y));
+            }
+
+            // Draw subdivisions with lower opacity
+            if (gridSubdivisions > 1)
+            {
+                Handles.color = new Color(gridColor.r, gridColor.g, gridColor.b, gridColor.a * gridOpacity * 0.5f);
+            
+                for (float x = Mathf.Floor(left / subdivSize) * subdivSize; x <= right; x += subdivSize)
+                {
+                    if (Mathf.Approximately(x % effectiveGridSize, 0)) continue;
+                    Handles.DrawLine(new Vector3(x, top), new Vector3(x, bottom));
+                }
+
+                for (float y = Mathf.Floor(top / subdivSize) * subdivSize; y <= bottom; y += subdivSize)
+                {
+                    if (Mathf.Approximately(y % effectiveGridSize, 0)) continue;
+                    Handles.DrawLine(new Vector3(left, y), new Vector3(right, y));
+                }
             }
         }
 
@@ -86,6 +209,7 @@ namespace Galacron.Formations
         {
             serializedObject.Update();
 
+            DrawGridSettings();
             EditorGUILayout.Space(10);
             
             // Preview Section
@@ -344,66 +468,64 @@ namespace Galacron.Formations
             EditorGUILayout.EndVertical();
         }
 
-        private void OnSceneGUI(SceneView sceneView)
+         private void OnSceneGUI(SceneView sceneView)
+    {
+        if (!editingSlots) return;
+
+        var config = (FormationConfig)target;
+        var spacing = config.spacing;
+
+        // Draw slots
+        for (int i = 0; i < slotPositionsProperty.arraySize; i++)
         {
-            if (!editingSlots) return;
+            var slotProperty = slotPositionsProperty.GetArrayElementAtIndex(i);
+            var position = slotProperty.vector2Value * spacing;
 
-            var config = (FormationConfig)target;
-            var spacing = config.spacing;
+            // Draw handle
+            float handleSize = HandleUtility.GetHandleSize(position) * HandleSize;
+            bool isSelected = i == selectedSlotIndex;
 
-            // Draw slots
-            for (int i = 0; i < slotPositionsProperty.arraySize; i++)
+            Handles.color = isSelected ? Color.yellow : previewColors[i % previewColors.Length];
+            if (Handles.Button(position, Quaternion.identity, handleSize, handleSize, Handles.DotHandleCap))
             {
-                var slotProperty = slotPositionsProperty.GetArrayElementAtIndex(i);
-                var position = slotProperty.vector2Value * spacing;
-
-                // Draw handle
-                float handleSize = HandleUtility.GetHandleSize(position) * HandleSize;
-                bool isSelected = i == selectedSlotIndex;
-
-                Handles.color = isSelected ? Color.yellow : previewColors[i % previewColors.Length];
-                if (Handles.Button(position, Quaternion.identity, handleSize, handleSize, Handles.DotHandleCap))
-                {
-                    selectedSlotIndex = i;
-                    Repaint();
-                }
-
-                // Draw slot index
-                Handles.Label(position + Vector2.up * handleSize, $"Slot {i}");
-
-                // Position handle for selected slot
-                if (isSelected)
-                {
-                    EditorGUI.BeginChangeCheck();
-                    Vector3 newPosition = Handles.DoPositionHandle(position, Quaternion.identity);
-                    if (EditorGUI.EndChangeCheck())
-                    {
-                        Undo.RecordObject(target, "Move Formation Slot");
-                        slotProperty.vector2Value = new Vector2(newPosition.x, newPosition.y) / spacing;
-                        serializedObject.ApplyModifiedProperties();
-                    }
-                }
+                selectedSlotIndex = i;
+                Repaint();
             }
 
-            // Draw connections between slots
-            if (slotPositionsProperty.arraySize > 1)
+            // Draw slot index
+            Handles.Label(position + Vector2.up * handleSize, $"Slot {i}");
+
+            // Position handle for selected slot with grid snapping
+            if (isSelected)
             {
-                Handles.color = new Color(1, 1, 1, 0.5f);
-                for (int i = 0; i < slotPositionsProperty.arraySize - 1; i++)
+                EditorGUI.BeginChangeCheck();
+                Vector3 newPosition = Handles.DoPositionHandle(position, Quaternion.identity);
+                if (EditorGUI.EndChangeCheck())
                 {
-                    var start = slotPositionsProperty.GetArrayElementAtIndex(i).vector2Value * spacing;
-                    var end = slotPositionsProperty.GetArrayElementAtIndex(i + 1).vector2Value * spacing;
-                    Handles.DrawDottedLine(start, end, 5f);
+                    Undo.RecordObject(target, "Move Formation Slot");
+                    Vector2 snappedPosition = SnapToGrid(new Vector2(newPosition.x, newPosition.y));
+                    slotProperty.vector2Value = snappedPosition / spacing;
+                    serializedObject.ApplyModifiedProperties();
                 }
             }
-
-            // Draw origin reference
-            Handles.color = Color.blue;
-            Handles.DrawWireCube(Vector3.zero, Vector3.one * 0.5f);
-            
-            // Consume input to prevent default tool behavior
-            HandleUtility.AddDefaultControl(GUIUtility.GetControlID(FocusType.Passive));
         }
+
+        // Draw grid in scene view if enabled
+        if (showGrid)
+        {
+            var viewRect = sceneView.position;
+            viewRect.x = 0;
+            viewRect.y = 0;
+            DrawGridGuides(viewRect, Vector2.zero);
+        }
+
+        // Draw origin reference
+        Handles.color = Color.blue;
+        Handles.DrawWireCube(Vector3.zero, Vector3.one * 0.5f);
+        
+        // Consume input to prevent default tool behavior
+        HandleUtility.AddDefaultControl(GUIUtility.GetControlID(FocusType.Passive));
+    }
 
         private void AddSlot()
         {
