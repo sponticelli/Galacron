@@ -1,824 +1,266 @@
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
-using System.Linq;
 
 namespace Galacron.Formations
 {
     [CustomEditor(typeof(FormationConfig))]
     public class FormationConfigEditor : UnityEditor.Editor
     {
-        private bool editingSlots;
-        private Tool lastTool;
-        private int selectedSlotIndex = -1;
-        private Vector2 dragStartPosition;
+        private FormationGridTool gridTool;
+        private FormationSymmetryTool symmetryTool;
+        private FormationSlotEditor slotEditor;
+        private FormationPreviewTool previewTool;
+        
+        // Template-related fields
+        private bool showTemplateSection = true;
+        private string newTemplateName = "";
+        private Vector2 templateScrollPosition;
+        private FormationTemplate selectedTemplate;
+
+        // Serialized properties
         private SerializedProperty slotPositionsProperty;
         private SerializedProperty spacingProperty;
-        private SerializedProperty arrivalDelayProperty;
+        private SerializedProperty arrivalDelayBetweenMembersProperty;
+        private SerializedProperty idleAmplitudeProperty;
+        private SerializedProperty idleFrequencyProperty;
+        private SerializedProperty moveSpeedProperty;
+        private SerializedProperty rotationSpeedProperty;
+        private SerializedProperty attackCooldownProperty;
+        private SerializedProperty maxSimultaneousAttackersProperty;
+        private SerializedProperty attackProbabilityProperty;
+        private SerializedProperty entryPathProperty;
+        private SerializedProperty attackPathProperty;
+        private SerializedProperty returnPathProperty;
 
-        // Grid Settings
-        private bool showGridSettings = true;
-        private bool enableGrid = true;
-        private float gridSize = 0.5f;
-        private bool showGrid = true;
-        private Color gridColor = new Color(1f, 1f, 1f, 0.2f);
-        private float gridOpacity = 0.2f;
-        private int gridSubdivisions = 2;
-
-        // Preview settings
-        private bool showPreview = true;
-        private Vector2 previewScrollPosition;
-        private float previewZoom = 1f;
-        private Vector2 previewPan;
-        private bool isDraggingPreview;
-        private Vector2 lastMousePosition;
-        private GUIStyle previewStyle;
-        private Texture2D gridTexture;
-
-        private Color[] previewColors = new[]
-        {
-            new Color(1f, 0.3f, 0.3f), // Red
-            new Color(0.3f, 1f, 0.3f), // Green
-            new Color(0.3f, 0.3f, 1f), // Blue
-            new Color(1f, 0.3f, 1f), // Pink
-            new Color(0.3f, 1f, 1f), // Cyan
-            new Color(0.6f, 0.6f, 1f), // Purple
-            new Color(1f, 0.5f, 0.3f), // Orange
-            new Color(0.5f, 0.6f, 0.3f) // Olive Green
-        };
-
-        private const float HandleSize = 0.2f;
-        private const float GridSize = 16f;
-
-        private bool showSymmetryTools = true;
-        private SymmetryMode currentSymmetryMode = SymmetryMode.None;
-        private Vector2 symmetryAxisOrigin = Vector2.zero;
-        private float symmetryAngle = 0f;
-        private int radialSegments = 4;
-        private float radialRadius = 2f;
-
-        private enum SymmetryMode
-        {
-            None,
-            Horizontal,
-            Vertical,
-            Diagonal,
-            Radial
-        }
-
+        private bool showBasicSettings = true;
+        private bool showMovementSettings = true;
+        private bool showAttackSettings = true;
+        private bool showPathSettings = true;
 
         private void OnEnable()
         {
+            // Initialize properties
             slotPositionsProperty = serializedObject.FindProperty("slotPositions");
             spacingProperty = serializedObject.FindProperty("spacing");
-            arrivalDelayProperty = serializedObject.FindProperty("arrivalDelayBetweenMembers");
-            SceneView.duringSceneGui += OnSceneGUI;
-            lastTool = Tools.current;
-            CreateGridTexture();
-            InitializePreviewStyle();
+            arrivalDelayBetweenMembersProperty = serializedObject.FindProperty("arrivalDelayBetweenMembers");
+            idleAmplitudeProperty = serializedObject.FindProperty("idleAmplitude");
+            idleFrequencyProperty = serializedObject.FindProperty("idleFrequency");
+            moveSpeedProperty = serializedObject.FindProperty("moveSpeed");
+            rotationSpeedProperty = serializedObject.FindProperty("rotationSpeed");
+            attackCooldownProperty = serializedObject.FindProperty("attackCooldown");
+            maxSimultaneousAttackersProperty = serializedObject.FindProperty("maxSimultaneousAttackers");
+            attackProbabilityProperty = serializedObject.FindProperty("attackProbability");
+            entryPathProperty = serializedObject.FindProperty("entryPath");
+            attackPathProperty = serializedObject.FindProperty("attackPath");
+            returnPathProperty = serializedObject.FindProperty("returnPath");
 
-            // Load grid preferences
-            enableGrid = EditorPrefs.GetBool("FormationConfigEditor_EnableGrid", true);
-            gridSize = EditorPrefs.GetFloat("FormationConfigEditor_GridSize", 0.5f);
-            showGrid = EditorPrefs.GetBool("FormationConfigEditor_ShowGrid", true);
-            gridOpacity = EditorPrefs.GetFloat("FormationConfigEditor_GridOpacity", 0.2f);
-            gridSubdivisions = EditorPrefs.GetInt("FormationConfigEditor_GridSubdivisions", 2);
+            // Initialize tools
+            gridTool = new FormationGridTool();
+            symmetryTool = new FormationSymmetryTool();
+            slotEditor = new FormationSlotEditor(slotPositionsProperty);
+            previewTool = new FormationPreviewTool();
+
+            SceneView.duringSceneGui += OnSceneGUI;
         }
 
         private void OnDisable()
         {
             SceneView.duringSceneGui -= OnSceneGUI;
-            Tools.current = lastTool;
-            if (gridTexture != null)
-            {
-                DestroyImmediate(gridTexture);
-            }
-
-            // Save grid preferences
-            EditorPrefs.SetBool("FormationConfigEditor_EnableGrid", enableGrid);
-            EditorPrefs.SetFloat("FormationConfigEditor_GridSize", gridSize);
-            EditorPrefs.SetBool("FormationConfigEditor_ShowGrid", showGrid);
-            EditorPrefs.SetFloat("FormationConfigEditor_GridOpacity", gridOpacity);
-            EditorPrefs.SetInt("FormationConfigEditor_GridSubdivisions", gridSubdivisions);
-        }
-
-        private void DrawGridSettings()
-        {
-            EditorGUILayout.BeginVertical(EditorStyles.helpBox);
-            showGridSettings = EditorGUILayout.Foldout(showGridSettings, "Grid Settings", true);
-
-            if (showGridSettings)
-            {
-                EditorGUI.indentLevel++;
-
-                enableGrid = EditorGUILayout.Toggle("Enable Snapping", enableGrid);
-                showGrid = EditorGUILayout.Toggle("Show Grid", showGrid);
-
-                using (new EditorGUI.DisabledScope(!enableGrid))
-                {
-                    gridSize = EditorGUILayout.FloatField("Grid Size", gridSize);
-                    gridSubdivisions = EditorGUILayout.IntSlider("Subdivisions", gridSubdivisions, 1, 4);
-                }
-
-                using (new EditorGUI.DisabledScope(!showGrid))
-                {
-                    gridOpacity = EditorGUILayout.Slider("Grid Opacity", gridOpacity, 0.1f, 1f);
-                    gridColor = EditorGUILayout.ColorField("Grid Color", gridColor);
-                }
-
-                if (GUILayout.Button("Reset Grid Settings"))
-                {
-                    ResetGridSettings();
-                }
-
-                EditorGUI.indentLevel--;
-            }
-
-            EditorGUILayout.EndVertical();
-        }
-
-        private void ResetGridSettings()
-        {
-            enableGrid = true;
-            gridSize = 0.5f;
-            showGrid = true;
-            gridOpacity = 0.2f;
-            gridSubdivisions = 2;
-            gridColor = new Color(1f, 1f, 1f, 0.2f);
-        }
-
-        private Vector2 SnapToGrid(Vector2 position)
-        {
-            if (!enableGrid) return position;
-
-            float subdivisionSize = gridSize / gridSubdivisions;
-            float x = Mathf.Round(position.x / subdivisionSize) * subdivisionSize;
-            float y = Mathf.Round(position.y / subdivisionSize) * subdivisionSize;
-            return new Vector2(x, y);
-        }
-
-        private void DrawGridGuides(Rect previewArea, Vector2 center)
-        {
-            if (!showGrid) return;
-
-            float effectiveGridSize = gridSize * previewZoom;
-            float subdivSize = effectiveGridSize / gridSubdivisions;
-
-            // Calculate grid bounds
-            float left = center.x - previewArea.width / 2;
-            float right = center.x + previewArea.width / 2;
-            float top = center.y - previewArea.height / 2;
-            float bottom = center.y + previewArea.height / 2;
-
-            Handles.color = new Color(gridColor.r, gridColor.g, gridColor.b, gridColor.a * gridOpacity);
-
-            // Draw main grid lines
-            for (float x = Mathf.Floor(left / effectiveGridSize) * effectiveGridSize;
-                 x <= right;
-                 x += effectiveGridSize)
-            {
-                Handles.DrawLine(new Vector3(x, top), new Vector3(x, bottom));
-            }
-
-            for (float y = Mathf.Floor(top / effectiveGridSize) * effectiveGridSize;
-                 y <= bottom;
-                 y += effectiveGridSize)
-            {
-                Handles.DrawLine(new Vector3(left, y), new Vector3(right, y));
-            }
-
-            // Draw subdivisions with lower opacity
-            if (gridSubdivisions > 1)
-            {
-                Handles.color = new Color(gridColor.r, gridColor.g, gridColor.b, gridColor.a * gridOpacity * 0.5f);
-
-                for (float x = Mathf.Floor(left / subdivSize) * subdivSize; x <= right; x += subdivSize)
-                {
-                    if (Mathf.Approximately(x % effectiveGridSize, 0)) continue;
-                    Handles.DrawLine(new Vector3(x, top), new Vector3(x, bottom));
-                }
-
-                for (float y = Mathf.Floor(top / subdivSize) * subdivSize; y <= bottom; y += subdivSize)
-                {
-                    if (Mathf.Approximately(y % effectiveGridSize, 0)) continue;
-                    Handles.DrawLine(new Vector3(left, y), new Vector3(right, y));
-                }
-            }
-        }
-
-        private void CreateGridTexture()
-        {
-            gridTexture = new Texture2D(32, 32);
-            var colors = new Color[32 * 32];
-            for (int y = 0; y < 32; y++)
-            {
-                for (int x = 0; x < 32; x++)
-                {
-                    colors[y * 32 + x] =
-                        (x == 0 || y == 0) ? new Color(1f, 1f, 1f, 0.1f) : new Color(1f, 1f, 1f, 0.05f);
-                }
-            }
-
-            gridTexture.SetPixels(colors);
-            gridTexture.Apply();
-            gridTexture.wrapMode = TextureWrapMode.Repeat;
-        }
-
-        private void InitializePreviewStyle()
-        {
-            previewStyle = new GUIStyle();
-            previewStyle.normal.background = EditorGUIUtility.whiteTexture;
+            gridTool.OnDisable();
+            symmetryTool.OnDisable();
+            slotEditor.OnDisable();
+            previewTool.OnDisable();
         }
 
         public override void OnInspectorGUI()
         {
             serializedObject.Update();
-
-            DrawGridSettings();
+            
+            // Draw template section
+            DrawTemplateSection();
             EditorGUILayout.Space(10);
 
-            // Preview Section
-            DrawPreviewSection();
+            // Grid settings section
+            gridTool.OnInspectorGUI();
             EditorGUILayout.Space(10);
 
-            DrawSymmetryTools();
+            // Preview section
+            previewTool.OnInspectorGUI(slotPositionsProperty, spacingProperty.floatValue);
+            EditorGUILayout.Space(10);
+
+            // Symmetry tools section
+            symmetryTool.OnInspectorGUI(slotPositionsProperty);
             EditorGUILayout.Space(10);
 
             // Slot editing section
-            DrawSlotEditingSection();
-
+            slotEditor.OnInspectorGUI();
             EditorGUILayout.Space(10);
 
-            // Configuration section
-            DrawConfigurationSection();
-
-            // Draw rest of properties
-            EditorGUILayout.Space(10);
-            DrawPropertiesExcluding(serializedObject,
-                "m_Script",
-                "slotPositions",
-                "spacing",
-                "arrivalDelayBetweenMembers");
+            // Formation settings sections
+            DrawFormationSettings();
 
             serializedObject.ApplyModifiedProperties();
         }
-
-        private void DrawPreviewSection()
+        
+        private void DrawTemplateSection()
         {
             EditorGUILayout.BeginVertical(EditorStyles.helpBox);
+            showTemplateSection = EditorGUILayout.Foldout(showTemplateSection, "Formation Templates", true);
 
-            EditorGUILayout.BeginHorizontal();
-            showPreview = EditorGUILayout.Foldout(showPreview, "Formation Preview", true);
-            previewZoom = EditorGUILayout.Slider(previewZoom, 0.1f, 5f, GUILayout.Width(200));
-            if (GUILayout.Button("Reset View", GUILayout.Width(100)))
+            if (showTemplateSection)
             {
-                ResetPreviewView();
-            }
+                EditorGUI.indentLevel++;
 
-            EditorGUILayout.EndHorizontal();
-
-            if (showPreview)
-            {
-                var rect = GUILayoutUtility.GetRect(0, 300);
-                DrawPreview(rect);
-                HandlePreviewInput(rect);
-            }
-
-            EditorGUILayout.EndVertical();
-        }
-
-        private void DrawPreview(Rect rect)
-        {
-            // Draw background
-            EditorGUI.DrawRect(rect, new Color(0.2f, 0.2f, 0.2f, 1));
-
-            // Begin preview area
-            GUI.BeginClip(rect);
-
-            // Draw grid
-            var gridOffset = new Vector2(
-                previewPan.x % (GridSize * previewZoom),
-                previewPan.y % (GridSize * previewZoom)
-            );
-            var gridRect = new Rect(gridOffset.x, gridOffset.y, rect.width, rect.height);
-            var gridScale = new Vector2(previewZoom / GridSize, previewZoom / GridSize);
-            GUI.DrawTextureWithTexCoords(
-                gridRect,
-                gridTexture,
-                new Rect(0, 0, rect.width / (GridSize * previewZoom), rect.height / (GridSize * previewZoom))
-            );
-
-            // Draw origin
-            var centerX = rect.width * 0.5f + previewPan.x;
-            var centerY = rect.height * 0.5f + previewPan.y;
-            Handles.color = Color.yellow;
-            Handles.DrawLine(
-                new Vector2(centerX - 10, centerY),
-                new Vector2(centerX + 10, centerY));
-            Handles.DrawLine(
-                new Vector2(centerX, centerY - 10),
-                new Vector2(centerX, centerY + 10));
-
-            // Draw formation slots
-            var spacing = spacingProperty.floatValue;
-            for (int i = 0; i < slotPositionsProperty.arraySize; i++)
-            {
-                var slotProperty = slotPositionsProperty.GetArrayElementAtIndex(i);
-                var position = slotProperty.vector2Value * spacing;
-                var screenPos = new Vector2(
-                    centerX + position.x * previewZoom,
-                    centerY - position.y * previewZoom // Invert Y coordinate
-                );
-
-                var slotSize = HandleSize * 20 * previewZoom;
-                var slotRect = new Rect(
-                    screenPos.x - slotSize * 0.5f,
-                    screenPos.y - slotSize * 0.5f,
-                    slotSize,
-                    slotSize
-                );
-
-                // Draw slot connections
-                if (i > 0)
+                // Template list
+                var templates = FormationTemplateManager.GetAllTemplates();
+                templateScrollPosition = EditorGUILayout.BeginScrollView(templateScrollPosition, GUILayout.Height(100));
+                
+                foreach (var template in templates)
                 {
-                    var prevSlot = slotPositionsProperty.GetArrayElementAtIndex(i - 1).vector2Value * spacing;
-                    var prevScreenPos = new Vector2(
-                        centerX + prevSlot.x * previewZoom,
-                        centerY - prevSlot.y * previewZoom // Invert Y coordinate
-                    );
-
-                    Handles.color = new Color(1f, 1f, 1f, 0.3f);
-                    Handles.DrawLine(prevScreenPos, screenPos);
-                }
-
-                // Draw slot
-                var color = i == selectedSlotIndex ? Color.yellow : previewColors[i % previewColors.Length];
-                Handles.color = color;
-                Handles.DrawSolidDisc(screenPos, Vector3.forward, slotSize * 0.5f);
-
-                // Draw slot index
-                var style = new GUIStyle(EditorStyles.boldLabel);
-                style.normal.textColor = Color.black;
-                var indexContent = new GUIContent(i.ToString());
-                var labelSize = style.CalcSize(indexContent);
-                GUI.Label(
-                    new Rect(
-                        screenPos.x - labelSize.x * 0.5f,
-                        screenPos.y - labelSize.y * 0.5f,
-                        labelSize.x,
-                        labelSize.y
-                    ),
-                    indexContent,
-                    style
-                );
-            }
-
-            GUI.EndClip();
-        }
-
-        private void HandlePreviewInput(Rect previewRect)
-        {
-            var currentEvent = Event.current;
-
-            if (!previewRect.Contains(currentEvent.mousePosition))
-                return;
-
-            // Handle preview dragging
-            switch (currentEvent.type)
-            {
-                case EventType.MouseDown:
-                    if (currentEvent.button == 0 || currentEvent.button == 2)
+                    EditorGUILayout.BeginHorizontal();
+                    
+                    bool isSelected = selectedTemplate == template;
+                    bool newSelected = EditorGUILayout.ToggleLeft(template.templateName, isSelected);
+                    
+                    if (newSelected != isSelected)
                     {
-                        isDraggingPreview = true;
-                        lastMousePosition = currentEvent.mousePosition;
-                        currentEvent.Use();
+                        selectedTemplate = newSelected ? template : null;
                     }
 
-                    break;
-
-                case EventType.MouseUp:
-                    isDraggingPreview = false;
-                    break;
-
-                case EventType.MouseDrag:
-                    if (isDraggingPreview)
+                    if (GUILayout.Button("Apply", GUILayout.Width(60)))
                     {
-                        previewPan += (currentEvent.mousePosition - lastMousePosition);
-                        lastMousePosition = currentEvent.mousePosition;
-                        Repaint();
-                        currentEvent.Use();
+                        if (EditorUtility.DisplayDialog("Apply Template",
+                            "Are you sure you want to apply this template? This will override current formation settings.",
+                            "Apply", "Cancel"))
+                        {
+                            template.ApplyToConfig(target as FormationConfig);
+                            serializedObject.Update();
+                        }
                     }
 
-                    break;
+                    if (GUILayout.Button("Delete", GUILayout.Width(60)))
+                    {
+                        if (EditorUtility.DisplayDialog("Delete Template",
+                            "Are you sure you want to delete this template?",
+                            "Delete", "Cancel"))
+                        {
+                            FormationTemplateManager.DeleteTemplate(template);
+                            if (selectedTemplate == template)
+                            {
+                                selectedTemplate = null;
+                            }
+                        }
+                    }
 
-                case EventType.ScrollWheel:
-                    previewZoom = Mathf.Clamp(previewZoom - currentEvent.delta.y * 0.1f, 0.1f, 5f);
-                    Repaint();
-                    currentEvent.Use();
-                    break;
-            }
-        }
-
-        private void ResetPreviewView()
-        {
-            previewZoom = 1f;
-            previewPan = Vector2.zero;
-            Repaint();
-        }
-
-        private void DrawSlotEditingSection()
-        {
-            EditorGUILayout.BeginVertical(EditorStyles.helpBox);
-            EditorGUILayout.LabelField("Formation Slots", EditorStyles.boldLabel);
-            EditorGUILayout.Space(5);
-
-            GUI.backgroundColor = editingSlots ? Color.green : Color.white;
-            if (GUILayout.Button(editingSlots ? "Stop Editing Slots" : "Edit Slots"))
-            {
-                editingSlots = !editingSlots;
-                if (editingSlots)
-                {
-                    lastTool = Tools.current;
-                    Tools.current = Tool.None;
+                    EditorGUILayout.EndHorizontal();
                 }
-                else
+                
+                EditorGUILayout.EndScrollView();
+
+                // Template details
+                if (selectedTemplate != null)
                 {
-                    Tools.current = lastTool;
-                    selectedSlotIndex = -1;
+                    EditorGUILayout.Space(5);
+                    EditorGUILayout.LabelField("Template Details:", EditorStyles.boldLabel);
+                    EditorGUI.indentLevel++;
+                    EditorGUILayout.LabelField("Slots:", selectedTemplate.slotPositions?.Length.ToString() ?? "0");
+                    EditorGUILayout.LabelField("Spacing:", selectedTemplate.spacing.ToString());
+                    EditorGUILayout.LabelField("Arrival Delay:", selectedTemplate.arrivalDelayBetweenMembers.ToString());
+                    EditorGUI.indentLevel--;
                 }
 
-                SceneView.RepaintAll();
-            }
-
-            GUI.backgroundColor = Color.white;
-
-            EditorGUILayout.Space(5);
-            EditorGUILayout.LabelField($"Slots: {slotPositionsProperty.arraySize}", EditorStyles.miniLabel);
-
-            if (editingSlots)
-            {
+                // Create new template
+                EditorGUILayout.Space(5);
                 EditorGUILayout.BeginHorizontal();
-                if (GUILayout.Button("Add Slot"))
+                newTemplateName = EditorGUILayout.TextField("New Template Name", newTemplateName);
+                
+                EditorGUI.BeginDisabledGroup(string.IsNullOrWhiteSpace(newTemplateName));
+                if (GUILayout.Button("Create", GUILayout.Width(60)))
                 {
-                    AddSlot();
+                    var template = FormationTemplateManager.CreateTemplate(newTemplateName, target as FormationConfig);
+                    selectedTemplate = template;
+                    newTemplateName = "";
                 }
-
-                GUI.enabled = selectedSlotIndex >= 0;
-                if (GUILayout.Button("Remove Selected"))
-                {
-                    RemoveSelectedSlot();
-                }
-
-                GUI.enabled = true;
+                EditorGUI.EndDisabledGroup();
+                
                 EditorGUILayout.EndHorizontal();
 
-                EditorGUILayout.Space(5);
-
-                if (selectedSlotIndex >= 0 && selectedSlotIndex < slotPositionsProperty.arraySize)
-                {
-                    EditorGUILayout.BeginVertical(EditorStyles.helpBox);
-                    EditorGUILayout.LabelField($"Editing Slot {selectedSlotIndex}", EditorStyles.boldLabel);
-
-                    var slotProperty = slotPositionsProperty.GetArrayElementAtIndex(selectedSlotIndex);
-                    EditorGUI.BeginChangeCheck();
-                    Vector2 newPosition = EditorGUILayout.Vector2Field("Position", slotProperty.vector2Value);
-                    if (EditorGUI.EndChangeCheck())
-                    {
-                        slotProperty.vector2Value = newPosition;
-                    }
-
-                    EditorGUILayout.EndVertical();
-                }
+                EditorGUI.indentLevel--;
             }
-
+            
             EditorGUILayout.EndVertical();
         }
 
-        private void DrawConfigurationSection()
+        private void DrawFormationSettings()
         {
-            EditorGUILayout.BeginVertical(EditorStyles.helpBox);
-            EditorGUILayout.LabelField("Configuration", EditorStyles.boldLabel);
-            EditorGUILayout.PropertyField(spacingProperty);
-            EditorGUILayout.PropertyField(arrivalDelayProperty);
-            EditorGUILayout.EndVertical();
+            // Basic Settings
+            showBasicSettings = EditorGUILayout.Foldout(showBasicSettings, "Basic Settings", true);
+            if (showBasicSettings)
+            {
+                EditorGUI.indentLevel++;
+                EditorGUILayout.PropertyField(spacingProperty);
+                EditorGUILayout.PropertyField(arrivalDelayBetweenMembersProperty);
+                EditorGUI.indentLevel--;
+            }
+
+            EditorGUILayout.Space(5);
+
+            // Movement Settings
+            showMovementSettings = EditorGUILayout.Foldout(showMovementSettings, "Movement Settings", true);
+            if (showMovementSettings)
+            {
+                EditorGUI.indentLevel++;
+                EditorGUILayout.PropertyField(idleAmplitudeProperty);
+                EditorGUILayout.PropertyField(idleFrequencyProperty);
+                EditorGUILayout.PropertyField(moveSpeedProperty);
+                EditorGUILayout.PropertyField(rotationSpeedProperty);
+                EditorGUI.indentLevel--;
+            }
+
+            EditorGUILayout.Space(5);
+
+            // Attack Settings
+            showAttackSettings = EditorGUILayout.Foldout(showAttackSettings, "Attack Settings", true);
+            if (showAttackSettings)
+            {
+                EditorGUI.indentLevel++;
+                EditorGUILayout.PropertyField(attackCooldownProperty);
+                EditorGUILayout.PropertyField(maxSimultaneousAttackersProperty);
+                EditorGUILayout.PropertyField(attackProbabilityProperty);
+                EditorGUI.indentLevel--;
+            }
+
+            EditorGUILayout.Space(5);
+
+            // Path Settings
+            showPathSettings = EditorGUILayout.Foldout(showPathSettings, "Path Settings", true);
+            if (showPathSettings)
+            {
+                EditorGUI.indentLevel++;
+                EditorGUILayout.PropertyField(entryPathProperty, new GUIContent("Entry Path"), true);
+                EditorGUILayout.PropertyField(attackPathProperty, new GUIContent("Attack Path"), true);
+                EditorGUILayout.PropertyField(returnPathProperty, new GUIContent("Return Path"), true);
+                EditorGUI.indentLevel--;
+            }
         }
 
         private void OnSceneGUI(SceneView sceneView)
         {
-            if (!editingSlots) return;
+            if (target == null) return;
 
-            // Draw symmetry guides
-            DrawSymmetryGuides();
+            // Draw grid if enabled
+            gridTool.OnSceneGUI(sceneView);
 
-            var config = (FormationConfig)target;
-            var spacing = config.spacing;
+            // Draw symmetry guides if in symmetry mode
+            symmetryTool.OnSceneGUI();
 
-            // Draw slots
-            for (int i = 0; i < slotPositionsProperty.arraySize; i++)
+            // Draw slot handles if in edit mode
+            slotEditor.OnSceneGUI(gridTool, spacingProperty.floatValue);
+
+            // Consume input to prevent default tool behavior when editing
+            if (slotEditor.IsEditing)
             {
-                var slotProperty = slotPositionsProperty.GetArrayElementAtIndex(i);
-                var position = slotProperty.vector2Value * spacing;
-
-                // Draw handle
-                float handleSize = HandleUtility.GetHandleSize(position) * HandleSize;
-                bool isSelected = i == selectedSlotIndex;
-
-                Handles.color = isSelected ? Color.yellow : previewColors[i % previewColors.Length];
-                if (Handles.Button(position, Quaternion.identity, handleSize, handleSize, Handles.DotHandleCap))
-                {
-                    selectedSlotIndex = i;
-                    Repaint();
-                }
-
-                // Draw slot index
-                Handles.Label(position + Vector2.up * handleSize, $"Slot {i}");
-
-                // Position handle for selected slot with grid snapping
-                if (isSelected)
-                {
-                    EditorGUI.BeginChangeCheck();
-                    Vector3 newPosition = Handles.DoPositionHandle(position, Quaternion.identity);
-                    if (EditorGUI.EndChangeCheck())
-                    {
-                        Undo.RecordObject(target, "Move Formation Slot");
-                        Vector2 snappedPosition = SnapToGrid(new Vector2(newPosition.x, newPosition.y));
-                        slotProperty.vector2Value = snappedPosition / spacing;
-                        serializedObject.ApplyModifiedProperties();
-                    }
-                }
-            }
-
-            // Draw grid in scene view if enabled
-            if (showGrid)
-            {
-                var viewRect = sceneView.position;
-                viewRect.x = 0;
-                viewRect.y = 0;
-                DrawGridGuides(viewRect, Vector2.zero);
-            }
-
-            // Draw origin reference
-            Handles.color = Color.blue;
-            Handles.DrawWireCube(Vector3.zero, Vector3.one * 0.5f);
-
-            // Consume input to prevent default tool behavior
-            HandleUtility.AddDefaultControl(GUIUtility.GetControlID(FocusType.Passive));
-        }
-
-        private void AddSlot()
-        {
-            Vector2 newPosition = Vector2.zero;
-
-            // If there are existing slots, place the new one relative to the last one
-            if (slotPositionsProperty.arraySize > 0)
-            {
-                var lastSlot = slotPositionsProperty.GetArrayElementAtIndex(slotPositionsProperty.arraySize - 1);
-                newPosition = lastSlot.vector2Value + Vector2.right;
-            }
-
-            slotPositionsProperty.InsertArrayElementAtIndex(slotPositionsProperty.arraySize);
-            var newSlot = slotPositionsProperty.GetArrayElementAtIndex(slotPositionsProperty.arraySize - 1);
-            newSlot.vector2Value = newPosition;
-
-            selectedSlotIndex = slotPositionsProperty.arraySize - 1;
-            serializedObject.ApplyModifiedProperties();
-
-            SceneView.RepaintAll();
-        }
-
-        private void RemoveSelectedSlot()
-        {
-            if (selectedSlotIndex < 0 || selectedSlotIndex >= slotPositionsProperty.arraySize)
-                return;
-
-            slotPositionsProperty.DeleteArrayElementAtIndex(selectedSlotIndex);
-            selectedSlotIndex = -1;
-            serializedObject.ApplyModifiedProperties();
-
-            SceneView.RepaintAll();
-        }
-
-        private void DrawSymmetryTools()
-        {
-            EditorGUILayout.BeginVertical(EditorStyles.helpBox);
-            showSymmetryTools = EditorGUILayout.Foldout(showSymmetryTools, "Symmetry Tools", true);
-
-            if (showSymmetryTools)
-            {
-                EditorGUI.indentLevel++;
-
-                // Mode selection
-                EditorGUI.BeginChangeCheck();
-                currentSymmetryMode = (SymmetryMode)EditorGUILayout.EnumPopup("Symmetry Mode", currentSymmetryMode);
-                if (EditorGUI.EndChangeCheck())
-                {
-                    SceneView.RepaintAll();
-                }
-
-                // Mode-specific settings
-                switch (currentSymmetryMode)
-                {
-                    case SymmetryMode.Horizontal:
-                    case SymmetryMode.Vertical:
-                    case SymmetryMode.Diagonal:
-                        symmetryAxisOrigin = EditorGUILayout.Vector2Field("Axis Origin", symmetryAxisOrigin);
-                        if (currentSymmetryMode == SymmetryMode.Diagonal)
-                        {
-                            symmetryAngle = EditorGUILayout.Slider("Angle", symmetryAngle, -180f, 180f);
-                        }
-
-                        break;
-
-                    case SymmetryMode.Radial:
-                        radialSegments = EditorGUILayout.IntSlider("Segments", radialSegments, 2, 12);
-                        radialRadius = EditorGUILayout.FloatField("Radius", radialRadius);
-                        break;
-                }
-
-                // Apply symmetry buttons
-                EditorGUILayout.Space(5);
-                if (GUILayout.Button("Apply Symmetry"))
-                {
-                    ApplySymmetry();
-                }
-
-                if (GUILayout.Button("Clear All Slots"))
-                {
-                    if (EditorUtility.DisplayDialog("Clear All Slots",
-                            "Are you sure you want to clear all slots?", "Clear", "Cancel"))
-                    {
-                        ClearAllSlots();
-                    }
-                }
-
-                EditorGUI.indentLevel--;
-            }
-
-            EditorGUILayout.EndVertical();
-        }
-
-        private void ApplySymmetry()
-        {
-            serializedObject.Update();
-            Undo.RecordObject(target, "Apply Formation Symmetry");
-
-            var positions = new List<Vector2>();
-            var existingPositions = GetExistingPositions();
-
-            switch (currentSymmetryMode)
-            {
-                case SymmetryMode.Horizontal:
-                    foreach (var pos in existingPositions)
-                    {
-                        positions.Add(pos);
-                        positions.Add(new Vector2(pos.x, -pos.y + (2 * symmetryAxisOrigin.y)));
-                    }
-
-                    break;
-
-                case SymmetryMode.Vertical:
-                    foreach (var pos in existingPositions)
-                    {
-                        positions.Add(pos);
-                        positions.Add(new Vector2(-pos.x + (2 * symmetryAxisOrigin.x), pos.y));
-                    }
-
-                    break;
-
-                case SymmetryMode.Diagonal:
-                    var rad = symmetryAngle * Mathf.Deg2Rad;
-                    var rotationMatrix = new Matrix4x4(
-                        new Vector4(Mathf.Cos(rad), -Mathf.Sin(rad), 0, 0),
-                        new Vector4(Mathf.Sin(rad), Mathf.Cos(rad), 0, 0),
-                        new Vector4(0, 0, 1, 0),
-                        new Vector4(0, 0, 0, 1)
-                    );
-
-                    foreach (var pos in existingPositions)
-                    {
-                        positions.Add(pos);
-                        var localPos = pos - symmetryAxisOrigin;
-                        var reflected = rotationMatrix.MultiplyPoint(new Vector3(-localPos.x, localPos.y, 0));
-                        positions.Add(new Vector2(reflected.x, reflected.y) + symmetryAxisOrigin);
-                    }
-
-                    break;
-
-                case SymmetryMode.Radial:
-                    foreach (var pos in existingPositions)
-                    {
-                        var localPos = pos - symmetryAxisOrigin;
-                        var angle = Mathf.Atan2(localPos.y, localPos.x);
-                        var radius = localPos.magnitude;
-
-                        for (int i = 0; i < radialSegments; i++)
-                        {
-                            var segmentAngle = (2 * Mathf.PI * i) / radialSegments;
-                            var rotatedPos = new Vector2(
-                                Mathf.Cos(segmentAngle) * radius,
-                                Mathf.Sin(segmentAngle) * radius
-                            );
-                            positions.Add(rotatedPos + symmetryAxisOrigin);
-                        }
-                    }
-
-                    break;
-            }
-
-            // Remove duplicates and update slots
-            positions = positions.Distinct().ToList();
-            UpdateSlotPositions(positions);
-
-            serializedObject.ApplyModifiedProperties();
-            SceneView.RepaintAll();
-        }
-
-        private List<Vector2> GetExistingPositions()
-        {
-            var positions = new List<Vector2>();
-            for (int i = 0; i < slotPositionsProperty.arraySize; i++)
-            {
-                positions.Add(slotPositionsProperty.GetArrayElementAtIndex(i).vector2Value);
-            }
-
-            return positions;
-        }
-
-        private void UpdateSlotPositions(List<Vector2> positions)
-        {
-            slotPositionsProperty.ClearArray();
-            foreach (var position in positions)
-            {
-                slotPositionsProperty.arraySize++;
-                var element = slotPositionsProperty.GetArrayElementAtIndex(slotPositionsProperty.arraySize - 1);
-                element.vector2Value = position;
-            }
-        }
-
-        private void ClearAllSlots()
-        {
-            serializedObject.Update();
-            slotPositionsProperty.ClearArray();
-            serializedObject.ApplyModifiedProperties();
-            SceneView.RepaintAll();
-        }
-
-        private void DrawSymmetryGuides()
-        {
-            if (currentSymmetryMode == SymmetryMode.None) return;
-
-            Handles.color = new Color(1f, 1f, 0f, 0.5f); // Semi-transparent yellow
-
-            switch (currentSymmetryMode)
-            {
-                case SymmetryMode.Horizontal:
-                    Handles.DrawLine(
-                        symmetryAxisOrigin + Vector2.left * 10f,
-                        symmetryAxisOrigin + Vector2.right * 10f
-                    );
-                    break;
-
-                case SymmetryMode.Vertical:
-                    Handles.DrawLine(
-                        symmetryAxisOrigin + Vector2.up * 10f,
-                        symmetryAxisOrigin + Vector2.down * 10f
-                    );
-                    break;
-
-                case SymmetryMode.Diagonal:
-                    var rad = symmetryAngle * Mathf.Deg2Rad;
-                    var direction = new Vector2(Mathf.Cos(rad), Mathf.Sin(rad));
-                    Handles.DrawLine(
-                        symmetryAxisOrigin + direction * -10f,
-                        symmetryAxisOrigin + direction * 10f
-                    );
-                    break;
-
-                case SymmetryMode.Radial:
-                    Handles.DrawWireDisc(symmetryAxisOrigin, Vector3.forward, radialRadius);
-                    for (int i = 0; i < radialSegments; i++)
-                    {
-                        var segmentAngle = (2 * Mathf.PI * i) / radialSegments;
-                        var rayDir = new Vector2(Mathf.Cos(segmentAngle), Mathf.Sin(segmentAngle));
-                        Handles.DrawLine(
-                            symmetryAxisOrigin,
-                            symmetryAxisOrigin + rayDir * radialRadius
-                        );
-                    }
-
-                    break;
-            }
-
-            // Draw axis origin handle
-            if (currentSymmetryMode != SymmetryMode.None && currentSymmetryMode != SymmetryMode.Radial)
-            {
-                EditorGUI.BeginChangeCheck();
-                var newOrigin = Handles.PositionHandle(symmetryAxisOrigin, Quaternion.identity);
-                if (EditorGUI.EndChangeCheck())
-                {
-                    symmetryAxisOrigin = newOrigin;
-                    Repaint();
-                }
+                HandleUtility.AddDefaultControl(GUIUtility.GetControlID(FocusType.Passive));
             }
         }
     }

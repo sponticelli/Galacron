@@ -1021,7 +1021,7 @@ MonoBehaviour:
   fallbackPrefabs: []
   config:
     spawnStrategy: 0
-    spawnCount: 4
+    spawnCount: 7
     spawnInterval: 0.25
     intervalVariation: 0.1
     positionVariation: {x: 0, y: 0, z: 0}
