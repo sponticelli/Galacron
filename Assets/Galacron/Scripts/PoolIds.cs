@@ -5,22 +5,40 @@ namespace Galacron
 {
     public enum Pools
     {
-        ENEMY_DRAGONFLY,
+        ENEMYWASP,
         FIREFLYBULLET,
+        PATHINLEFT,
+        PATHINLEFT2,
+        PATHINRIGHT,
+        PATHINRIGHT2,
         PLAYERBULLET,
+        PATHDIVE1,
+        PATHDIVE2
     }
 
     public static class PoolIds
     {
-        public const string ENEMY_DRAGONFLY = "Enemy Dragonfly";
+        public const string ENEMYWASP = "EnemyWasp";
         public const string FIREFLYBULLET = "FireflyBullet";
+        public const string PATHINLEFT = "PathInLeft";
+        public const string PATHINLEFT2 = "PathInLeft2";
+        public const string PATHINRIGHT = "PathInRight";
+        public const string PATHINRIGHT2 = "PathInRight2";
         public const string PLAYERBULLET = "PlayerBullet";
+        public const string PATHDIVE1 = "PathDive1";
+        public const string PATHDIVE2 = "PathDive2";
 
         private static readonly Dictionary<string, string> _prefabNames = new Dictionary<string, string>
         {
-            { "Enemy Dragonfly", "FireflyEnemy" },
+            { "EnemyWasp", "EnemyWasp" },
             { "FireflyBullet", "FireflyBullet" },
+            { "PathInLeft", "PathInLeft" },
+            { "PathInLeft2", "PathInLeft2" },
+            { "PathInRight", "PathInRight" },
+            { "PathInRight2", "PathInRight2" },
             { "PlayerBullet", "PlayerBullet" },
+            { "PathDive1", "PathDive1" },
+            { "PathDive2", "PathDive2" }
         };
 
         public static string GetPrefabName(string poolId)

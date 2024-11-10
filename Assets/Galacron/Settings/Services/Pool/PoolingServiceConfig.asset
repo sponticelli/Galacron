@@ -16,12 +16,54 @@ MonoBehaviour:
   - id: PlayerBullet
     prefab: {fileID: 3613037869655021087, guid: 7bf9b40028f094a4f89edba28a7c33d5, type: 3}
     initialSize: 10
-    maxSize: 225
+    maxSize: 338
     autoExpand: 1
     recycleTimeout: 0
   - id: FireflyBullet
     prefab: {fileID: 3613037869655021087, guid: b5e1507029ee0412c90dbaa06f7cb30a, type: 3}
     initialSize: 10
     maxSize: 338
+    autoExpand: 1
+    recycleTimeout: -1
+  - id: EnemyWasp
+    prefab: {fileID: 2906427794650903631, guid: 1342bb800ba354c5b923cac71e305582, type: 3}
+    initialSize: 10
+    maxSize: 100
+    autoExpand: 1
+    recycleTimeout: -1
+  - id: PathInLeft
+    prefab: {fileID: 8733746416143563677, guid: ac3bedc9d855547d58a16be988c7cd3a, type: 3}
+    initialSize: 4
+    maxSize: 8
+    autoExpand: 1
+    recycleTimeout: -1
+  - id: PathInLeft2
+    prefab: {fileID: 6331194222847553765, guid: fc4171ee92ecc40d484543fa7e832385, type: 3}
+    initialSize: 4
+    maxSize: 8
+    autoExpand: 1
+    recycleTimeout: -1
+  - id: PathInRight
+    prefab: {fileID: 3618222211130682126, guid: f266689d82fe64e0097da1c007ed3484, type: 3}
+    initialSize: 4
+    maxSize: 8
+    autoExpand: 1
+    recycleTimeout: -1
+  - id: PathInRight2
+    prefab: {fileID: 961728488448188001, guid: 34247663a415349f38bdc49ab5c11026, type: 3}
+    initialSize: 4
+    maxSize: 8
+    autoExpand: 1
+    recycleTimeout: -1
+  - id: PathDive1
+    prefab: {fileID: 3746953050744664743, guid: 215978bfd0ca140abb664115e1164bb2, type: 3}
+    initialSize: 10
+    maxSize: 100
+    autoExpand: 1
+    recycleTimeout: -1
+  - id: PathDive2
+    prefab: {fileID: 5907418787384694640, guid: 7d5edaa3f16d049c1b795f50b1413fa3, type: 3}
+    initialSize: 10
+    maxSize: 100
     autoExpand: 1
     recycleTimeout: -1
