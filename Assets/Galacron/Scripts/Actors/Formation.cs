@@ -20,7 +20,7 @@ namespace Galacron.Actors
         [SerializeField] private int gridSizeY = 2;
         [SerializeField] private float gridOffsetX = 1f;
         [SerializeField] private float gridOffsetY = 1f;
-        [SerializeField] private int div = 4;
+
         
         [Header("Diving Settings")]
         [SerializeField] private float minTimeAfterSpawn = 6f;
@@ -103,12 +103,17 @@ namespace Galacron.Actors
 
             int num = 0;
 
+            var width = (gridSizeX - 1) * gridOffsetX;
+            var height = (gridSizeY - 1) * gridOffsetY;
+            var startX = transform.position.x  - width/2 ;
+            var startY = transform.position.y -  height ;
+            
             for (int i = 0; i < gridSizeX; i++)
             {
                 for (int j = 0; j < gridSizeY; j++)
                 {
-                    float x = (gridOffsetX + gridOffsetX * 2 * (num / div)) * Mathf.Pow(-1, num % 2 + 1);
-                    float y = gridOffsetY * ((num % div) / 2);
+                    float x = startX + i * gridOffsetX;
+                    float y = startY +  j * gridOffsetY;
 
                     Vector3 vec = new Vector3(x, y, 0);
 
@@ -142,8 +147,9 @@ namespace Galacron.Actors
                     enemy.transform.position, Quaternion.identity);
                 
 
-                var path = pathGO.GetComponent<Path>();
+                var path = pathGO.GetComponent<PathBase>();
                 _divePaths.Add(enemy.EnemyID, pathGO);
+                path.RecalculatePath(); 
                 enemy.DiveSetup(path);
                 enemyList.RemoveAt(choosenEnemy);
             }

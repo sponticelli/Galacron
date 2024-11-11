@@ -241,7 +241,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1a359dbb77724eb88aaae63b03f423c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pathFollower: {fileID: 6508214207869910443}
+  pathFollower: {fileID: 4935576839106232250}
   moveToTarget: {fileID: 6971781354706878330}
   speed: 6
   inFormationScore: 50
@@ -316,7 +316,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2661222696279927640}
-  - component: {fileID: 6508214207869910443}
+  - component: {fileID: 4935576839106232250}
   m_Layer: 8
   m_Name: PathFollower
   m_TagString: Untagged
@@ -339,7 +339,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 6266112636918061537}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6508214207869910443
+--- !u!114 &4935576839106232250
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -348,26 +348,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 3502833860184858274}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 260391e4d4bf43bdacfb9f6ca95ed6b4, type: 3}
+  m_Script: {fileID: 11500000, guid: 3f6e594b594e44a99134b8a2533d5b8e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   objectToMove: {fileID: 6266112636918061537}
-  pathToFollow: {fileID: 0}
-  speed: 6
+  currentPath: {fileID: 0}
+  baseSpeed: 6
   reachDistance: 0.4
-  useBezier: 1
-  OnPathEnd:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 6323535025117250655}
-        m_TargetAssemblyTypeName: Galacron.Actors.Enemybehavior, Assembly-CSharp
-        m_MethodName: OnPathEnd
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+  lookAtDirection: 1
+  rotationSpeed: 10

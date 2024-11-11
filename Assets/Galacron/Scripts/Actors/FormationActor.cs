@@ -12,7 +12,7 @@ namespace Galacron.Actors
         [SerializeField] private MoveToTarget moveToTarget;
         
         public float speed = 2;
-        private Path _pathToFollow;
+        private PathBase _pathToFollow;
         private float _distance; //current distance to next waypoint
         private Formation _formation;
         
@@ -44,6 +44,7 @@ namespace Galacron.Actors
         // Use this for initialization
         private void Start()
         {
+            pathFollower.OnPathCompleted += OnPathEnd;
             poolingService = ServiceLocator.Instance.GetService<IPoolingService>();
         }
 
@@ -80,7 +81,7 @@ namespace Galacron.Actors
         }
         
 
-        public void SpawnSetup(Path path, int ID, Formation _formation)
+        public void SpawnSetup(PathBase path, int ID, Formation _formation)
         {
             _pathToFollow = path;
             EnemyID = ID;
@@ -89,7 +90,7 @@ namespace Galacron.Actors
             CurrentState = State.OnPath;
         }
 
-        public void DiveSetup(Path path)
+        public void DiveSetup(PathBase path)
         {
             _pathToFollow = path;
             transform.SetParent(null);

@@ -1,27 +1,31 @@
 using System;
 using UnityEngine;
-using UnityEngine.Events;
 
 namespace Galacron.Paths
 {
     public class PathFollower : MonoBehaviour
     {
+        [Header("References")]
         [SerializeField] private Transform objectToMove;
-        [SerializeField] private Path pathToFollow;
-        [SerializeField] private float speed = 2;
+        [SerializeField] private PathBase currentPath;
+        
+        [Header("Movement Settings")]
+        [SerializeField] private float baseSpeed = 2f;
         [SerializeField] private float reachDistance = 0.4f;
-        [SerializeField] private bool useBezier;
+        [SerializeField] private bool lookAtDirection = true;
+        [SerializeField] private float rotationSpeed = 10f;
         
-        [SerializeField] private UnityEvent OnPathEnd;
+        private float currentDistance;
+        private float waitTimeRemaining;
+        private bool isPaused;
         
-        private int currentWayPointID = 0;
-        private float distance; //current distance to next waypoint
+        public event Action OnPathCompleted;
+        public event Action<float> OnProgressChanged;
         
-        public void SetPath(Path path)
-        {
-            pathToFollow = path;
-            currentWayPointID = 0;
-        }
+        public float Progress => currentPath != null ? 
+            currentDistance / currentPath.GetTotalLength() : 0f;
+            
+        public bool IsMoving => currentPath != null && !isPaused;
         
         private void Start()
         {
@@ -30,62 +34,136 @@ namespace Galacron.Paths
                 objectToMove = transform;
             }
         }
-
-        private void Update()
+        
+        public void SetPath(IPath path)
         {
-            if (pathToFollow == null)
+            currentPath = path as PathBase;
+            currentDistance = 0f;
+            waitTimeRemaining = 0f;
+            isPaused = false;
+            
+            if (path != null)
             {
-                return;
+                OnProgressChanged?.Invoke(0f);
             }
-            MoveOnPath();
         }
         
-        private void MoveOnPath()
+        public void Pause() => isPaused = true;
+        public void Resume() => isPaused = false;
+        
+        private void Update()
         {
-            int pathCount = 0;
-            if (useBezier)
+            if (currentPath == null || isPaused) return;
+            
+            // Handle waiting
+            if (waitTimeRemaining > 0)
             {
-                MoveOnBezierPath();
-                pathCount = pathToFollow.bezierObjList.Count;
+                waitTimeRemaining -= Time.deltaTime;
+                return;
+            }
+            
+            // Move along path
+            float totalLength = currentPath.GetTotalLength();
+            if (totalLength <= 0)
+            {
+                Debug.LogWarning("Path has zero length", this);
+                return;
+            }
+            
+            if (currentDistance >= totalLength)
+            {
+                if (currentPath.IsLooped)
+                {
+                    currentDistance = 0f;
+                }
+                else
+                {
+                    CompletePathing();
+                    return;
+                }
+            }
+            
+            // Get current point and move towards it
+            Vector3 targetPoint = currentPath.GetPointAtDistance(currentDistance);
+            
+            // Validate target point
+            if (float.IsNaN(targetPoint.x) || float.IsNaN(targetPoint.y) || float.IsNaN(targetPoint.z))
+            {
+                Debug.LogError($"Invalid path point received at distance {currentDistance}", this);
+                CompletePathing();
+                return;
+            }
+            
+            float speedMultiplier = Mathf.Max(0.1f, currentPath.GetSpeedMultiplierAtDistance(currentDistance));
+            float currentSpeed = baseSpeed * speedMultiplier;
+            
+            Vector3 moveDirection = (targetPoint - objectToMove.position);
+            float distance = moveDirection.magnitude;
+            
+            // Only normalize if distance is not zero to avoid NaN
+            if (distance > 0.001f)
+            {
+                moveDirection /= distance;
             }
             else
             {
-                MoveOnStraightPath();
-                pathCount = pathToFollow.pathObjList.Count;
+                // Skip this frame if too close to target
+                currentDistance += currentSpeed * Time.deltaTime;
+                OnProgressChanged?.Invoke(Progress);
+                return;
             }
             
-            if (distance <= reachDistance)
+            // Move
+            Vector3 newPosition = Vector3.MoveTowards(
+                objectToMove.position,
+                targetPoint,
+                currentSpeed * Time.deltaTime
+            );
+            
+            // Validate new position before applying
+            if (!float.IsNaN(newPosition.x) && !float.IsNaN(newPosition.y) && !float.IsNaN(newPosition.z))
             {
-                currentWayPointID++;
+                objectToMove.position = newPosition;
+            }
+            else
+            {
+                Debug.LogError("Invalid position calculated", this);
+                CompletePathing();
+                return;
             }
             
-            if (currentWayPointID >= pathCount)
+            // Update distance
+            currentDistance += currentSpeed * Time.deltaTime;
+            
+            // Handle rotation
+            if (lookAtDirection && moveDirection != Vector3.zero)
             {
-                currentWayPointID = 0;
-                OnPathEnd?.Invoke();
+                float angle = Mathf.Atan2(moveDirection.y, moveDirection.x) * Mathf.Rad2Deg - 90;
+                Quaternion targetRotation = Quaternion.Euler(0, 0, angle);
+                objectToMove.rotation = Quaternion.Lerp(
+                    objectToMove.rotation,
+                    targetRotation,
+                    rotationSpeed * Time.deltaTime
+                );
             }
+            
+            OnProgressChanged?.Invoke(Progress);
         }
         
-        private void MoveOnBezierPath()
+        private void CompletePathing()
         {
-            distance = Vector3.Distance(pathToFollow.bezierObjList[currentWayPointID], objectToMove.position);
-            objectToMove.position = Vector3.MoveTowards(objectToMove.position, pathToFollow.bezierObjList[currentWayPointID],
-                speed * Time.deltaTime);
-            
-            var direction = pathToFollow.bezierObjList[currentWayPointID] - objectToMove.position;
-            var angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg - 90;
-            objectToMove.rotation = Quaternion.Euler(0, 0, angle);
+            OnPathCompleted?.Invoke();
+            currentPath = null;
+            currentDistance = 0f;
         }
-        
-        private void MoveOnStraightPath()
+
+        private void OnDisable()
         {
-            distance = Vector3.Distance(pathToFollow.pathObjList[currentWayPointID].position, objectToMove.position);
-            objectToMove.position = Vector3.MoveTowards(objectToMove.position,
-                pathToFollow.pathObjList[currentWayPointID].position, speed * Time.deltaTime);
-            
-            var direction = pathToFollow.pathObjList[currentWayPointID].position - objectToMove.position;
-            var angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg - 90;
-            objectToMove.rotation = Quaternion.Euler(0, 0, angle);
+            // Clean up when disabled
+            currentPath = null;
+            currentDistance = 0f;
+            waitTimeRemaining = 0f;
+            isPaused = false;
         }
     }
 }

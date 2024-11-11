@@ -19,7 +19,7 @@ namespace Galacron.Actors
 
         private int currentWaveIndex;
         private IPoolingService _poolingService;
-        private Dictionary<Pools, Path> _paths = new Dictionary<Pools, Path>();
+        private Dictionary<Pools, PathBase> _paths = new Dictionary<Pools, PathBase>();
         private List<GameObject> _enemies = new List<GameObject>();
 
         [Serializable]
@@ -53,13 +53,16 @@ namespace Galacron.Actors
             _paths.Clear();
             foreach (var wave in waves)
             {
-                foreach (var prefab in wave.paths)
+                foreach (var key in wave.paths)
                 {
-                    if (_paths.ContainsKey(prefab)) continue;
-                    var pathGO = _poolingService.GetFromPool(PoolIdConverter.GetId(prefab), transform.position,
+                    if (_paths.ContainsKey(key)) continue;
+                    Debug.Log($"Spawner: PreparePaths: {key}");
+                    
+                    var pathGO = _poolingService.GetFromPool(PoolIdConverter.GetId(key), transform.position,
                         Quaternion.identity);
-                    var path = pathGO.GetComponent<Path>();
-                    _paths.Add(prefab, path);
+                    var path = pathGO.GetComponent<PathBase>();
+                    path.RecalculatePath();
+                    _paths.Add(key, path);
                 }
             }
         }

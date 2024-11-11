@@ -164,7 +164,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 603270048276788272}
-  - component: {fileID: 2930512595981264095}
+  - component: {fileID: 7881316584224367550}
   m_Layer: 0
   m_Name: PathDive2
   m_TagString: Untagged
@@ -197,7 +197,7 @@ Transform:
   - {fileID: 1352945371093805076}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2930512595981264095
+--- !u!114 &7881316584224367550
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -206,80 +206,47 @@ MonoBehaviour:
   m_GameObject: {fileID: 5907418787384694640}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d34795aaf45c4d61adbd553634cffe31, type: 3}
+  m_Script: {fileID: 11500000, guid: dd362273ceff4361942c4a40e68dc983, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isLooped: 0
   pathColor: {r: 0, g: 1, b: 0, a: 1}
+  pathPoints:
+  - position: {x: 0, y: 0, z: 0}
+    waitTime: 0
+    speedMultiplier: 1
+  - position: {x: -0.5, y: 0.96, z: 0}
+    waitTime: 0
+    speedMultiplier: 1
+  - position: {x: -1.01, y: 0.01, z: 0}
+    waitTime: 0
+    speedMultiplier: 1
+  - position: {x: -1.53, y: -2.26, z: 0}
+    waitTime: 0
+    speedMultiplier: 1
+  - position: {x: 0.3, y: -3.73, z: 0}
+    waitTime: 0
+    speedMultiplier: 1
+  - position: {x: 2.65, y: -5.58, z: 0}
+    waitTime: 0
+    speedMultiplier: 1
+  - position: {x: 0.4, y: -7.76, z: 0}
+    waitTime: 0
+    speedMultiplier: 1
+  - position: {x: -2.24, y: -9.86, z: 0}
+    waitTime: 0
+    speedMultiplier: 1
+  - position: {x: 0.7758641, y: -12.218848, z: 0}
+    waitTime: 0
+    speedMultiplier: 1
+  - position: {x: 3.9, y: -14.45, z: 0}
+    waitTime: 0
+    speedMultiplier: 1
+  - position: {x: 5.41, y: -10.779703, z: 0}
+    waitTime: 0
+    speedMultiplier: 1
   visualizePath: 1
   lineDensity: 10
-  pathObjList:
-  - {fileID: 620562860923240690}
-  - {fileID: 6953008529414616646}
-  - {fileID: 1748384747071926562}
-  - {fileID: 4749305679259067044}
-  - {fileID: 7562319729033113666}
-  - {fileID: 3261940968347253645}
-  - {fileID: 3676263543286275593}
-  - {fileID: 4225672396129855404}
-  - {fileID: 8126593927586983085}
-  - {fileID: 1352945371093805076}
-  - {fileID: 1352945371093805076}
-  bezierObjList:
-  - {x: 0, y: 0, z: 0}
-  - {x: -0.10714, y: 0.17854, z: 0}
-  - {x: -0.21336, y: 0.31296003, z: 0}
-  - {x: -0.31866, y: 0.40326, z: 0}
-  - {x: -0.42304, y: 0.44944, z: 0}
-  - {x: -0.5265, y: 0.4515, z: 0}
-  - {x: -0.62904, y: 0.40944, z: 0}
-  - {x: -0.73065996, y: 0.32326, z: 0}
-  - {x: -0.83136, y: 0.19296, z: 0}
-  - {x: -0.93113995, y: 0.01854005, z: 0}
-  - {x: -1.03, y: -0.2, z: 0}
-  - {x: -1.03, y: -0.2, z: 0}
-  - {x: -1.1180999, y: -0.6327, z: 0}
-  - {x: -1.1583999, y: -1.0468, z: 0}
-  - {x: -1.1509, y: -1.4423001, z: 0}
-  - {x: -1.0956, y: -1.8192, z: 0}
-  - {x: -0.99249995, y: -2.1775002, z: 0}
-  - {x: -0.8416, y: -2.5172002, z: 0}
-  - {x: -0.64290005, y: -2.8383, z: 0}
-  - {x: -0.39639997, y: -3.1408, z: 0}
-  - {x: -0.10210009, y: -3.4247, z: 0}
-  - {x: 0.24, y: -3.69, z: 0}
-  - {x: 0.24, y: -3.69, z: 0}
-  - {x: 0.6813, y: -4.0824003, z: 0}
-  - {x: 1.0292001, y: -4.4756002, z: 0}
-  - {x: 1.2837, y: -4.8696, z: 0}
-  - {x: 1.4448, y: -5.2644, z: 0}
-  - {x: 1.5125, y: -5.66, z: 0}
-  - {x: 1.4868001, y: -6.0564003, z: 0}
-  - {x: 1.3677001, y: -6.4536004, z: 0}
-  - {x: 1.1552, y: -6.8516, z: 0}
-  - {x: 0.8493001, y: -7.2503996, z: 0}
-  - {x: 0.45, y: -7.65, z: 0}
-  - {x: 0.45, y: -7.65, z: 0}
-  - {x: -0.035400018, y: -8.123301, z: 0}
-  - {x: -0.3996, y: -8.5832, z: 0}
-  - {x: -0.6426, y: -9.0297, z: 0}
-  - {x: -0.7644, y: -9.4628, z: 0}
-  - {x: -0.765, y: -9.8825, z: 0}
-  - {x: -0.6444, y: -10.2888, z: 0}
-  - {x: -0.40260005, y: -10.6817, z: 0}
-  - {x: -0.039599966, y: -11.0612, z: 0}
-  - {x: 0.44459984, y: -11.4272995, z: 0}
-  - {x: 1.05, y: -11.78, z: 0}
-  - {x: 1.05, y: -11.78, z: 0}
-  - {x: 1.6029, y: -12.2816, z: 0}
-  - {x: 2.0976, y: -12.7304, z: 0}
-  - {x: 2.5341, y: -13.1264, z: 0}
-  - {x: 2.9124, y: -13.4696, z: 0}
-  - {x: 3.2325, y: -13.76, z: 0}
-  - {x: 3.4944, y: -13.997601, z: 0}
-  - {x: 3.6981, y: -14.1824, z: 0}
-  - {x: 3.8436, y: -14.3144, z: 0}
-  - {x: 3.9309, y: -14.3936, z: 0}
-  - {x: 3.96, y: -14.42, z: 0}
 --- !u!1 &6043430132692497438
 GameObject:
   m_ObjectHideFlags: 0
