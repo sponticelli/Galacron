@@ -13,6 +13,14 @@ namespace Galacron.Paths
         public float waitTime;
         public float speedMultiplier;
         
+        
+        public PathPoint(Vector3 position = default)
+        {
+            this.position = position;
+            waitTime = 0f;
+            speedMultiplier = 1f;
+        }
+        
         public PathPoint(Vector3 worldPosition, Transform relativeTo)
         {
             position = PathUtils.ToLocalSpace(relativeTo, worldPosition);

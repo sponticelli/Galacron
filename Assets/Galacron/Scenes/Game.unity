@@ -679,7 +679,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &543729055
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1166,11 +1166,11 @@ MonoBehaviour:
     amount: 5
   - _enemies: 00000000
     spawnInterval: 0.1
-    paths: 02000000
+    paths: 04000000
     amount: 5
   - _enemies: 00000000
     spawnInterval: 0.1
-    paths: 04000000
+    paths: 02000000
     amount: 5
   - _enemies: 00000000
     spawnInterval: 0.1
@@ -1185,7 +1185,7 @@ Transform:
   m_GameObject: {fileID: 1006616738}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 14.96, z: 0}
+  m_LocalPosition: {x: 0, y: 11.6, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

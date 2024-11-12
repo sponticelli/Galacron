@@ -1,3 +1,4 @@
+using System;
 using Galacron.Paths;
 using Nexus.Core.ServiceLocation;
 using Nexus.Pooling;
@@ -6,10 +7,39 @@ using UnityEngine;
 
 namespace Galacron.Actors
 {
+    [Serializable]
+    public class FireSettings
+    {
+        public bool canFire = true;
+        public float minFireRate = 0.5f;
+        public float maxFireRate = 1f;
+        public float minPrecision = 0.1f;
+        public float maxPrecision = 0.5f;
+        
+        public float GetFireRate()
+        {
+            return UnityEngine.Random.Range(minFireRate, maxFireRate);
+        }
+        
+        public float GetPrecision()
+        {
+            return UnityEngine.Random.Range(minPrecision, maxPrecision);
+        }
+    }
+    
+    
     public class FormationActor : MonoBehaviour
     {
+        [Header("References")]
         [SerializeField] private PathFollower pathFollower;
         [SerializeField] private MoveToTarget moveToTarget;
+        [SerializeField] private Weapon weapon;
+        
+        [Header("Shooting Settings")]
+        [SerializeField] private FireSettings OnPathFireSettings;
+        [SerializeField] private FireSettings OnFlyInFireSettings;
+        [SerializeField] private FireSettings OnIdleFireSettings;
+        [SerializeField] private FireSettings OnDiveFireSettings;
         
         public float speed = 2;
         private PathBase _pathToFollow;
@@ -40,6 +70,8 @@ namespace Galacron.Actors
 
 
         private IPoolingService poolingService;
+        
+        private float _nextFire;
 
         // Use this for initialization
         private void Start()
@@ -51,33 +83,58 @@ namespace Galacron.Actors
         // Update is called once per frame
         private void Update()
         {
+            _nextFire -= Time.deltaTime;
             switch (CurrentState)
             {
                 case State.OnPath:
-                {
+                    if (OnPathFireSettings.canFire && _nextFire <= 0)
+                    {
+                        Shoot();
+                        _nextFire = OnPathFireSettings.GetFireRate();
+                    }
                     TrailActivate(true);
-                }
                     break;
                 case State.FlyIn:
-                {
-                    //TrailActivate(true);
+                    if (OnFlyInFireSettings.canFire && _nextFire <= 0)
+                    {
+                        Shoot();
+                        _nextFire = OnFlyInFireSettings.GetFireRate();
+                    }
                     moveToTarget.SetTarget(_formation.GetVector(EnemyID));
-                }
+                
                     break;
                 case State.Idle:
+                    if (OnIdleFireSettings.canFire && _nextFire <= 0)
+                    {
+                        Shoot();
+                        _nextFire = OnIdleFireSettings.GetFireRate();
+                    }
                     TrailActivate(false);
                     break;
                 case State.Dive:
                     TrailActivate(true);
-                    //SHOOTING
-                    Shoot();    
+                    if (OnDiveFireSettings.canFire && _nextFire <= 0)
+                    {
+                        Shoot();
+                        _nextFire = OnDiveFireSettings.GetFireRate();
+                    }
                     break;
             }
         }
 
         private void Shoot()
         {
-            // TODO Implement shooting
+            // ROTATE WEAPON  z axis is 180 degrees off
+            if (weapon == null) return;
+            
+            weapon.transform.rotation = Quaternion.Euler(0, 0, 180);
+            if (weapon.IsShooting)
+            {
+                weapon.StopShooting();
+                return;
+            }
+            weapon.Shoot();
+            
         }
         
 

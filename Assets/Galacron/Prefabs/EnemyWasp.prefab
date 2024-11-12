@@ -182,6 +182,7 @@ Transform:
   - {fileID: 1912291533884111796}
   - {fileID: 4322256943295979390}
   - {fileID: 2661222696279927640}
+  - {fileID: 4384501261306956089}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!61 &4866200438048329176
@@ -243,6 +244,23 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pathFollower: {fileID: 4935576839106232250}
   moveToTarget: {fileID: 6971781354706878330}
+  weapon: {fileID: 625114731976853739}
+  OnPathFireSettings:
+    canFire: 1
+    fireRate: 0.5
+    precision: 0.1
+  OnFlyInFireSettings:
+    canFire: 1
+    fireRate: 0.5
+    precision: 0.1
+  OnIdleFireSettings:
+    canFire: 1
+    fireRate: 0.5
+    precision: 0.1
+  OnDiveFireSettings:
+    canFire: 1
+    fireRate: 0.5
+    precision: 0.1
   speed: 6
   inFormationScore: 50
   notInFormationScore: 100
@@ -357,3 +375,80 @@ MonoBehaviour:
   reachDistance: 0.4
   lookAtDirection: 1
   rotationSpeed: 10
+--- !u!1001 &2138903800517167825
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 6266112636918061537}
+    m_Modifications:
+    - target: {fileID: 1513828662814114362, guid: 603bb391829914825ae6ba1b7ad0fd32, type: 3}
+      propertyPath: _automaticFire
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2411124573286892520, guid: 603bb391829914825ae6ba1b7ad0fd32, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2411124573286892520, guid: 603bb391829914825ae6ba1b7ad0fd32, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2411124573286892520, guid: 603bb391829914825ae6ba1b7ad0fd32, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2411124573286892520, guid: 603bb391829914825ae6ba1b7ad0fd32, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2411124573286892520, guid: 603bb391829914825ae6ba1b7ad0fd32, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2411124573286892520, guid: 603bb391829914825ae6ba1b7ad0fd32, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2411124573286892520, guid: 603bb391829914825ae6ba1b7ad0fd32, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2411124573286892520, guid: 603bb391829914825ae6ba1b7ad0fd32, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2411124573286892520, guid: 603bb391829914825ae6ba1b7ad0fd32, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2411124573286892520, guid: 603bb391829914825ae6ba1b7ad0fd32, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6040098645601221165, guid: 603bb391829914825ae6ba1b7ad0fd32, type: 3}
+      propertyPath: m_Name
+      value: FireflyWeapon
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 603bb391829914825ae6ba1b7ad0fd32, type: 3}
+--- !u!114 &625114731976853739 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1513828662814114362, guid: 603bb391829914825ae6ba1b7ad0fd32, type: 3}
+  m_PrefabInstance: {fileID: 2138903800517167825}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc06eb1be21f478b8805f8b1fb8b2f59, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &4384501261306956089 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2411124573286892520, guid: 603bb391829914825ae6ba1b7ad0fd32, type: 3}
+  m_PrefabInstance: {fileID: 2138903800517167825}
+  m_PrefabAsset: {fileID: 0}

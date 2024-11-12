@@ -25,6 +25,7 @@ namespace Galacron.Actors
         private bool _isInitialized;
         private bool _isReloading;
         private string _bulletPoolId;
+        public bool IsShooting => _isShooting;
 
 
         private async void Start()
