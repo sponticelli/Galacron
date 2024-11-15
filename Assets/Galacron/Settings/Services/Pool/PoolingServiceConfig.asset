@@ -22,7 +22,7 @@ MonoBehaviour:
   - id: FireflyBullet
     prefab: {fileID: 3613037869655021087, guid: b5e1507029ee0412c90dbaa06f7cb30a, type: 3}
     initialSize: 10
-    maxSize: 338
+    maxSize: 1713
     autoExpand: 1
     recycleTimeout: -1
   - id: EnemyWasp
@@ -63,6 +63,12 @@ MonoBehaviour:
     recycleTimeout: -1
   - id: PathDive2
     prefab: {fileID: 5907418787384694640, guid: 7d5edaa3f16d049c1b795f50b1413fa3, type: 3}
+    initialSize: 10
+    maxSize: 100
+    autoExpand: 1
+    recycleTimeout: -1
+  - id: FX_Explosion
+    prefab: {fileID: 4488227567106404267, guid: d95d6a9d96b71443eacef7b859188bfa, type: 3}
     initialSize: 10
     maxSize: 100
     autoExpand: 1

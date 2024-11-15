@@ -5,46 +5,34 @@ namespace Galacron
 {
     public enum Pools
     {
-        ENEMYWASP,
-        FIREFLYBULLET,
-        PATHINLEFT,
-        PATHINLEFT2,
-        PATHINRIGHT,
-        PATHINRIGHT2,
-        PLAYERBULLET,
-        PATHDIVE1,
-        PATHDIVE2
+        ENEMYWASP = 0,
+        FIREFLYBULLET = 1,
+        FX_EXPLOSION = 2,
+        PATHDIVE1 = 3,
+        PATHDIVE2 = 4,
+        PATHINLEFT = 5,
+        PATHINLEFT2 = 6,
+        PATHINRIGHT = 7,
+        PATHINRIGHT2 = 8,
+        PLAYERBULLET = 9,
     }
 
     public static class PoolIds
     {
-        public const string ENEMYWASP = "EnemyWasp";
-        public const string FIREFLYBULLET = "FireflyBullet";
-        public const string PATHINLEFT = "PathInLeft";
-        public const string PATHINLEFT2 = "PathInLeft2";
-        public const string PATHINRIGHT = "PathInRight";
-        public const string PATHINRIGHT2 = "PathInRight2";
-        public const string PLAYERBULLET = "PlayerBullet";
-        public const string PATHDIVE1 = "PathDive1";
-        public const string PATHDIVE2 = "PathDive2";
-
-        private static readonly Dictionary<string, string> _prefabNames = new Dictionary<string, string>
+        public static class Poolingserviceconfig
         {
-            { "EnemyWasp", "EnemyWasp" },
-            { "FireflyBullet", "FireflyBullet" },
-            { "PathInLeft", "PathInLeft" },
-            { "PathInLeft2", "PathInLeft2" },
-            { "PathInRight", "PathInRight" },
-            { "PathInRight2", "PathInRight2" },
-            { "PlayerBullet", "PlayerBullet" },
-            { "PathDive1", "PathDive1" },
-            { "PathDive2", "PathDive2" }
-        };
-
-        public static string GetPrefabName(string poolId)
-        {
-            return _prefabNames.TryGetValue(poolId, out var name) ? name : null;
+            public const string ENEMYWASP = "EnemyWasp";
+            public const string FIREFLYBULLET = "FireflyBullet";
+            public const string FX_EXPLOSION = "FX_Explosion";
+            public const string PATHDIVE1 = "PathDive1";
+            public const string PATHDIVE2 = "PathDive2";
+            public const string PATHINLEFT = "PathInLeft";
+            public const string PATHINLEFT2 = "PathInLeft2";
+            public const string PATHINRIGHT = "PathInRight";
+            public const string PATHINRIGHT2 = "PathInRight2";
+            public const string PLAYERBULLET = "PlayerBullet";
         }
+
     }
 
     public static class PoolIdConverter
@@ -63,11 +51,21 @@ namespace Galacron
 
         private static void InitializeCache()
         {
-            var fields = typeof(PoolIds).GetFields();
-            var constants = fields.ToDictionary(
-                f => f.Name,
-                f => (string)f.GetValue(null)
-            );
+            var constants = new Dictionary<string, string>();
+
+            // Get nested type classes (configs)
+            var configClasses = typeof(PoolIds).GetNestedTypes();
+            foreach (var configClass in configClasses)
+            {
+                // Get all constant fields in this config class
+                var fields = configClass.GetFields(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.FlattenHierarchy)
+                    .Where(fi => fi.IsLiteral && !fi.IsInitOnly);
+
+                foreach (var field in fields)
+                {
+                    constants[field.Name] = (string)field.GetValue(null);
+                }
+            }
 
             foreach (Pools pool in System.Enum.GetValues(typeof(Pools)))
             {

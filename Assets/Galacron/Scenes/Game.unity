@@ -232,7 +232,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc06eb1be21f478b8805f8b1fb8b2f59, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _bulletPool: 6
+  _bulletPool: 9
   _weaponDelay: 0.2
   _bulletSpeed: 15
   _automaticFire: 1
@@ -376,7 +376,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  divePathList: 0700000008000000
+  divePathList: 0300000004000000
   enemyList: []
 --- !u!1 &315324829
 GameObject:
@@ -697,19 +697,19 @@ MonoBehaviour:
   waves:
   - _enemies: 00000000
     spawnInterval: 0.1
-    paths: 0200000004000000
+    paths: 0500000007000000
     amount: 5
   - _enemies: 00000000
     spawnInterval: 0.1
-    paths: 0200000004000000
+    paths: 0500000007000000
     amount: 5
   - _enemies: 00000000
     spawnInterval: 0.1
-    paths: 0200000004000000
+    paths: 0600000008000000
     amount: 5
   - _enemies: 00000000
     spawnInterval: 0.1
-    paths: 0200000004000000
+    paths: 0700000005000000
     amount: 5
 --- !u!4 &543729056
 Transform:
@@ -806,7 +806,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  divePathList: 0700000008000000
+  divePathList: 0300000004000000
   enemyList: []
 --- !u!1 &747319370
 GameObject:
@@ -1162,19 +1162,19 @@ MonoBehaviour:
   waves:
   - _enemies: 00000000
     spawnInterval: 0.1
-    paths: 02000000
+    paths: 05000000
     amount: 5
   - _enemies: 00000000
     spawnInterval: 0.1
-    paths: 04000000
+    paths: 07000000
     amount: 5
   - _enemies: 00000000
     spawnInterval: 0.1
-    paths: 02000000
+    paths: 06000000
     amount: 5
   - _enemies: 00000000
     spawnInterval: 0.1
-    paths: 04000000
+    paths: 08000000
     amount: 5
 --- !u!4 &1006616740
 Transform:

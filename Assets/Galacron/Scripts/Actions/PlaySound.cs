@@ -1,5 +1,6 @@
 using Nexus.Audio;
 using Nexus.Core.ServiceLocation;
+using Nexus.Pooling;
 using UnityEngine;
 
 namespace Galacron.Actions
@@ -13,22 +14,18 @@ namespace Galacron.Actions
         
         private string _soundId;
         
-        private async void Start()
-        {
-            _soundService = ServiceLocator.Instance.GetService<ISoundService>();
-            await _soundService.WaitForInitialization();
-            _isInitialized = true;
-            _soundId = SoundIdConverter.GetId(_sound);
-        }
-        
         public void Execute()
         {
             if (!_isInitialized)
             {
-                return;
+                _soundService = ServiceLocator.Instance.GetService<ISoundService>();
+                _isInitialized = true;
+                _soundId = SoundIdConverter.GetId(_sound);
             }
             
             _soundService.PlayOneShot(_soundId, transform.position);
         }
     }
+    
+    
 }
