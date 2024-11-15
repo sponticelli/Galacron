@@ -66,7 +66,9 @@ namespace Galacron.Actors
 
         private void ShootBullet()
         {
-            var bulletGO = _poolingService.GetFromPool(_bulletPoolId, transform.position, Quaternion.identity);
+            var rotation = transform.rotation;
+            
+            var bulletGO = _poolingService.GetFromPool(_bulletPoolId, transform.position, rotation);
             var bullet = bulletGO.GetComponent<BulletBase>();
             bullet.Velocity = transform.up * _bulletSpeed;
         }

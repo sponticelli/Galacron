@@ -1,210 +1,180 @@
-using System;
+using System.Collections.Generic;
+using Galacron.Actors.States;
 using Galacron.Paths;
+using Galacron.Player;
 using Nexus.Core.ServiceLocation;
 using Nexus.Pooling;
+using Nexus.Registries;
 using UnityEngine;
 
 
 namespace Galacron.Actors
 {
-    [Serializable]
-    public class FireSettings
-    {
-        public bool canFire = true;
-        public float minFireRate = 0.5f;
-        public float maxFireRate = 1f;
-        public float minPrecision = 0.1f;
-        public float maxPrecision = 0.5f;
-        
-        public float GetFireRate()
-        {
-            return UnityEngine.Random.Range(minFireRate, maxFireRate);
-        }
-        
-        public float GetPrecision()
-        {
-            return UnityEngine.Random.Range(minPrecision, maxPrecision);
-        }
-    }
-    
-    
     public class FormationActor : MonoBehaviour
     {
         [Header("References")]
         [SerializeField] private PathFollower pathFollower;
         [SerializeField] private MoveToTarget moveToTarget;
         [SerializeField] private Weapon weapon;
-        
-        [Header("Shooting Settings")]
-        [SerializeField] private FireSettings OnPathFireSettings;
-        [SerializeField] private FireSettings OnFlyInFireSettings;
-        [SerializeField] private FireSettings OnIdleFireSettings;
-        [SerializeField] private FireSettings OnDiveFireSettings;
-        
-        public float speed = 2;
-        private PathBase _pathToFollow;
-        private float _distance; //current distance to next waypoint
-        private Formation _formation;
-        
-        public enum State
+        [SerializeField] private ActorVisual visual;
+
+        [Header("Shooting Settings")] 
+        [SerializeField] private FireSettings onPathFireSettings;
+        [SerializeField] private FireSettings onFlyInFireSettings;
+        [SerializeField] private FireSettings onIdleFireSettings;
+        [SerializeField] private FireSettings onDiveFireSettings;
+
+        public float Speed = 2;
+        private PathBase pathToFollow;
+        private Formation formation;
+        private IActorState currentState;
+        private readonly Dictionary<StateType, IActorState> states;
+
+        public enum StateType
         {
-            OnPath, //is on a path
-            FlyIn, //fly into formation
+            OnPath,
+            FlyIn,
             Idle,
             Dive
         }
 
-        public State CurrentState { get; private set; }
         public int EnemyID { get; private set; } = -1;
-        
+        public int InFormationScore;
+        public int NotInFormationScore;
+        public TrailRenderer[] Trails;
+        public GameObject FxExplosion;
 
-        //SCORE
-        public int inFormationScore;
-        public int notInFormationScore;
-
-        //TRAILS
-        public TrailRenderer[] trails;
-
-        //EFFECTS
-        public GameObject fx_Explosion;
-
+        // Properties for state access
+        public MoveToTarget MoveToTarget => moveToTarget;
+        public Weapon Weapon => weapon;
+        public Formation Formation => formation;
+        public Transform Target => target;
+        public FireSettings OnPathFireSettings => onPathFireSettings;
+        public FireSettings OnFlyInFireSettings => onFlyInFireSettings;
+        public FireSettings OnIdleFireSettings => onIdleFireSettings;
+        public FireSettings OnDiveFireSettings => onDiveFireSettings;
 
         private IPoolingService poolingService;
-        
-        private float _nextFire;
+        private IComponentRegistry componentRegistry;
+        private Transform target;
 
-        // Use this for initialization
+        public FormationActor()
+        {
+            states = new Dictionary<StateType, IActorState>
+            {
+                { StateType.OnPath, new OnPathState(this) },
+                { StateType.FlyIn, new FlyInState(this) },
+                { StateType.Idle, new IdleState(this) },
+                { StateType.Dive, new DiveState(this) }
+            };
+        }
+
         private void Start()
         {
             pathFollower.OnPathCompleted += OnPathEnd;
             poolingService = ServiceLocator.Instance.GetService<IPoolingService>();
         }
 
-        // Update is called once per frame
+        private void OnEnable()
+        {
+            if (!ServiceLocator.Instance.CanResolve(typeof(IComponentRegistry)))
+                return;
+
+            componentRegistry = ServiceLocator.Instance.GetService<IComponentRegistry>();
+            if (componentRegistry == null) return;
+
+            target = componentRegistry.Get<PlayerController>().transform;
+            componentRegistry.SubscribeToRegister<PlayerController>(OnPlayerRegistered);
+            componentRegistry.SubscribeToDeRegister<PlayerController>(OnPlayerUnregistered);
+        }
+
+        private void OnDisable()
+        {
+            if (componentRegistry == null) return;
+            componentRegistry.UnsubscribeFromRegister<PlayerController>(OnPlayerRegistered);
+            componentRegistry.UnsubscribeFromDeRegister<PlayerController>(OnPlayerUnregistered);
+        }
+
         private void Update()
         {
-            _nextFire -= Time.deltaTime;
-            switch (CurrentState)
-            {
-                case State.OnPath:
-                    if (OnPathFireSettings.canFire && _nextFire <= 0)
-                    {
-                        Shoot();
-                        _nextFire = OnPathFireSettings.GetFireRate();
-                    }
-                    TrailActivate(true);
-                    break;
-                case State.FlyIn:
-                    if (OnFlyInFireSettings.canFire && _nextFire <= 0)
-                    {
-                        Shoot();
-                        _nextFire = OnFlyInFireSettings.GetFireRate();
-                    }
-                    moveToTarget.SetTarget(_formation.GetVector(EnemyID));
-                
-                    break;
-                case State.Idle:
-                    if (OnIdleFireSettings.canFire && _nextFire <= 0)
-                    {
-                        Shoot();
-                        _nextFire = OnIdleFireSettings.GetFireRate();
-                    }
-                    TrailActivate(false);
-                    break;
-                case State.Dive:
-                    TrailActivate(true);
-                    if (OnDiveFireSettings.canFire && _nextFire <= 0)
-                    {
-                        Shoot();
-                        _nextFire = OnDiveFireSettings.GetFireRate();
-                    }
-                    break;
-            }
+            currentState?.Update();
         }
 
-        private void Shoot()
+        public void ChangeState(StateType newState)
         {
-            // ROTATE WEAPON  z axis is 180 degrees off
-            if (weapon == null) return;
-            
-            weapon.transform.rotation = Quaternion.Euler(0, 0, 180);
-            if (weapon.IsShooting)
-            {
-                weapon.StopShooting();
-                return;
-            }
-            weapon.Shoot();
-            
+            currentState?.Exit();
+            currentState = states[newState];
+            currentState.Enter();
         }
-        
 
-        public void SpawnSetup(PathBase path, int ID, Formation _formation)
+        public void SpawnSetup(PathBase path, int id, Formation formation)
         {
-            _pathToFollow = path;
-            EnemyID = ID;
-            this._formation = _formation;
-            pathFollower.SetPath(_pathToFollow);
-            CurrentState = State.OnPath;
+            pathToFollow = path;
+            EnemyID = id;
+            this.formation = formation;
+            pathFollower.SetPath(pathToFollow);
+            ChangeState(StateType.OnPath);
         }
 
         public void DiveSetup(PathBase path)
         {
-            _pathToFollow = path;
+            pathToFollow = path;
             transform.SetParent(null);
-            pathFollower.SetPath(_pathToFollow);
-            CurrentState = State.Dive;
+            pathFollower.SetPath(pathToFollow);
+            ChangeState(StateType.Dive);
         }
-
 
         public void OnDeath()
         {
+            if (FxExplosion != null)
+            {
+                Instantiate(FxExplosion, transform.position, Quaternion.identity);
+            }
 
-                //PLAY SOUND
+            if (currentState is DiveState)
+            {
+                pathToFollow.gameObject.ReturnToPool();
+                pathToFollow = null;
+            }
 
-                //INSTATIATE PARTICLE
-                if (fx_Explosion != null)
-                {
-                    Instantiate(fx_Explosion, transform.position, Quaternion.identity);
-                }
-
-                if (CurrentState == State.Dive)
-                {
-                    _pathToFollow.gameObject.ReturnToPool();
-                    _pathToFollow = null;
-                }
-
-
-                //REPORT TO FORMATION
-                _formation.ReportDeath(EnemyID);
+            formation.ReportDeath(EnemyID);
         }
-        
+
         public void OnPathEnd()
         {
-            _pathToFollow = null;
+            pathToFollow = null;
             pathFollower.SetPath(null);
-            if (CurrentState == State.Dive)
-            {
-                _formation.OnDiveEnd(EnemyID);
-            }
-            CurrentState = State.FlyIn;
             
+            if (currentState is DiveState)
+            {
+                formation.OnDiveEnd(EnemyID);
+            }
+
+            ChangeState(StateType.FlyIn);
         }
-        
+
         public void OnFormationPositionReached()
         {
-            transform.SetParent(_formation.gameObject.transform);
+            transform.SetParent(formation.gameObject.transform);
             transform.eulerAngles = Vector3.zero;
-            _formation.RegisterEnemy(this);
-            CurrentState = State.Idle;
+            formation.RegisterEnemy(this);
+            ChangeState(StateType.Idle);
             moveToTarget.Stop();
         }
 
-        private void TrailActivate(bool on)
+        public void ActivateTrails(bool on)
         {
-            foreach (TrailRenderer trail in trails)
-            {
-                trail.enabled = on;
-            }
+            visual.ActivateTrails(on);
+        }
+
+        private void OnPlayerUnregistered(PlayerController obj)
+        {
+            target = null;
+        }
+
+        private void OnPlayerRegistered(PlayerController obj)
+        {
+            target = obj.transform;
         }
     }
 }

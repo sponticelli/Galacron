@@ -45,9 +45,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _bulletPool: 1
-  _weaponDelay: 0.4
-  _bulletSpeed: 12
-  _automaticFire: 1
+  _weaponDelay: 0.1
+  _bulletSpeed: 10
+  _automaticFire: 0
   _stopDelayOnRelease: 0
   onShoot:
     m_PersistentCalls:
