@@ -24,3 +24,13 @@ MonoBehaviour:
     lifetime: 1
     monoBehaviourPrefab: {fileID: 0}
     configuration: {fileID: 0}
+  - serviceName: ScoreManager
+    interfaceType:
+      typeName: Galacron.Score.IScoreManager, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    implementationType:
+      typeName: Galacron.Score.ScoreManager, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    lifetime: 1
+    monoBehaviourPrefab: {fileID: 0}
+    configuration: {fileID: 0}

@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Galacron.Actors.States;
 using Galacron.Paths;
 using Galacron.Player;
+using Galacron.Score;
 using Nexus.Core.ServiceLocation;
 using Nexus.Pooling;
 using Nexus.Registries;
@@ -23,8 +24,11 @@ namespace Galacron.Actors
         [SerializeField] private FireSettings onFlyInFireSettings;
         [SerializeField] private FireSettings onIdleFireSettings;
         [SerializeField] private FireSettings onDiveFireSettings;
-
-        public float Speed = 2;
+        
+        [Header("Score Settings")]
+        [SerializeField] private int pointValue = 50;
+        [SerializeField] private int divePointValue = 100;
+        
         private PathBase pathToFollow;
         private Formation formation;
         private IActorState currentState;
@@ -136,6 +140,12 @@ namespace Galacron.Actors
                 pathToFollow.gameObject.ReturnToPool();
                 pathToFollow = null;
             }
+            
+            var points = currentState is DiveState ? divePointValue : this.pointValue;
+            
+            GameEvents.OnEnemyKilled.OnNext(
+                new EnemyKilledEvent(points, transform.position)
+            );
 
             formation.ReportDeath(EnemyID);
         }
