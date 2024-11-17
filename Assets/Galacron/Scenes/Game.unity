@@ -800,7 +800,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 0
       minColor: {r: 1, g: 1, b: 1, a: 1}
-      maxColor: {r: 1, g: 1, b: 1, a: 1}
+      maxColor: {r: 0.99607843, g: 0.99607843, b: 0.99607843, a: 1}
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
@@ -5378,6 +5378,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _resetContextOnStart: 1
+  _debugMode: 1
   OnComplete:
     m_PersistentCalls:
       m_Calls: []
@@ -6127,7 +6128,7 @@ MonoBehaviour:
   config:
     message: LEVEL 02
     fontSize: 0
-    color: {r: 1, g: 1, b: 1, a: 1}
+    color: {r: 0.99607843, g: 0.99607843, b: 0.99607843, a: 1}
     fadeInDuration: 0.5
     holdDuration: 2
     fadeOutDuration: 0.5
@@ -6367,19 +6368,19 @@ MonoBehaviour:
   formation: {fileID: 599705398}
   waves:
   - _enemies: 00000000
-    spawnInterval: 0.1
+    spawnInterval: 0.2
     paths: 05000000
     amount: 5
   - _enemies: 00000000
-    spawnInterval: 0.1
+    spawnInterval: 0.2
     paths: 07000000
     amount: 5
   - _enemies: 00000000
-    spawnInterval: 0.1
+    spawnInterval: 0.2
     paths: 06000000
     amount: 5
   - _enemies: 00000000
-    spawnInterval: 0.1
+    spawnInterval: 0.2
     paths: 08000000
     amount: 5
 --- !u!4 &1006616740
@@ -7388,7 +7389,7 @@ MonoBehaviour:
   config:
     message: LEVEL 01
     fontSize: 0
-    color: {r: 1, g: 1, b: 1, a: 1}
+    color: {r: 0.99607843, g: 0.99607843, b: 0.99607843, a: 1}
     fadeInDuration: 0.5
     holdDuration: 2
     fadeOutDuration: 0.5
@@ -7533,7 +7534,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 1
-  m_Sprite: {fileID: 21300000, guid: 8b4744002e246466a80c4a2e6a86bc28, type: 3}
+  m_Sprite: {fileID: 21300000, guid: cb337d40c91f64b1e8a4a95500032528, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0

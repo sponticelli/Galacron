@@ -97,7 +97,7 @@ GameObject:
   - component: {fileID: 8611856198108562718}
   - component: {fileID: 7110334103365199158}
   m_Layer: 10
-  m_Name: FireflyBullet
+  m_Name: BulletFly
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

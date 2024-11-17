@@ -27,7 +27,7 @@ Transform:
   m_GameObject: {fileID: 1034692422003448070}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: -0.7071068, w: 0.7071068}
-  m_LocalPosition: {x: 0.027, y: -0.288, z: 0}
+  m_LocalPosition: {x: -0.011, y: -0.316, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -5015,7 +5015,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 78839669, guid: b4b2951a5f7d24605a3bfb68c681bd49, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 6c680fe5a792d4df388834f5bc409025, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -5039,7 +5039,7 @@ GameObject:
   - component: {fileID: 6323535025117250655}
   - component: {fileID: 8806387156948267387}
   m_Layer: 8
-  m_Name: EnemyWasp
+  m_Name: EnemyFly
   m_TagString: GameController
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5098,7 +5098,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.032084942, y: 0.0024681091}
+  m_Offset: {x: -0.00075244904, y: 0.0024681091}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -5109,7 +5109,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.69889355, y: 0.62978745}
+  m_Size: {x: 0.5708275, y: 0.62978745}
   m_EdgeRadius: 0
 --- !u!114 &6323535025117250655
 MonoBehaviour:
@@ -5151,7 +5151,8 @@ MonoBehaviour:
     maxFireRate: 1
     minPrecision: 0.1
     maxPrecision: 0.5
-  Speed: 2
+  pointValue: 50
+  divePointValue: 100
   InFormationScore: 0
   NotInFormationScore: 0
   Trails: []
