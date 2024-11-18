@@ -31,6 +31,4 @@ namespace Galacron.Score
             scoreText.text = $"{score:N0}";
         }
     }
-    
-
 }

@@ -44,7 +44,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc06eb1be21f478b8805f8b1fb8b2f59, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _bulletPool: 1
+  _bulletPool:
+    baseReference:
+      poolId: 
+      prefab: {fileID: 3613037869655021087, guid: b5e1507029ee0412c90dbaa06f7cb30a, type: 3}
   _weaponDelay: 0.1
   _bulletSpeed: 10
   _automaticFire: 0

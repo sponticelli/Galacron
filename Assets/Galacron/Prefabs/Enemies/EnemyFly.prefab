@@ -5128,27 +5128,27 @@ MonoBehaviour:
   weapon: {fileID: 625114731976853739}
   visual: {fileID: 5782634314760996133}
   onPathFireSettings:
-    canFire: 1
+    canFire: 0
     minFireRate: 0.5
     maxFireRate: 1
     minPrecision: 0.1
     maxPrecision: 0.5
   onFlyInFireSettings:
-    canFire: 1
+    canFire: 0
     minFireRate: 0.5
     maxFireRate: 1
     minPrecision: 0.1
     maxPrecision: 0.5
   onIdleFireSettings:
     canFire: 1
-    minFireRate: 0.5
-    maxFireRate: 1
+    minFireRate: 4
+    maxFireRate: 12
     minPrecision: 0.1
     maxPrecision: 0.5
   onDiveFireSettings:
     canFire: 1
-    minFireRate: 0.5
-    maxFireRate: 1
+    minFireRate: 1
+    maxFireRate: 3
     minPrecision: 0.1
     maxPrecision: 0.5
   pointValue: 50
@@ -5303,7 +5303,7 @@ Transform:
   m_GameObject: {fileID: 8327257284625624006}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.31178665, y: -0.3506627, z: 0.07081734}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -5354,7 +5354,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 444e154502774ed8af28da8b9837dcec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pool: 2
+  pool:
+    baseReference:
+      poolId: 
+      prefab: {fileID: 4488227567106404267, guid: d95d6a9d96b71443eacef7b859188bfa, type: 3}
 --- !u!1001 &2138903800517167825
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5367,6 +5370,10 @@ PrefabInstance:
       propertyPath: _automaticFire
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1513828662814114362, guid: 603bb391829914825ae6ba1b7ad0fd32, type: 3}
+      propertyPath: _bulletPool.baseReference.prefab
+      value: 
+      objectReference: {fileID: 3613037869655021087, guid: b5e1507029ee0412c90dbaa06f7cb30a, type: 3}
     - target: {fileID: 2411124573286892520, guid: 603bb391829914825ae6ba1b7ad0fd32, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

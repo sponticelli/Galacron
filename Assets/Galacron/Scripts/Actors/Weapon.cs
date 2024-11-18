@@ -10,32 +10,23 @@ namespace Galacron.Actors
     public class Weapon : MonoBehaviour
     {
         [Header("Settings")] 
-        [SerializeField] private Pools _bulletPool;
+        [SerializeField] private PoolReference<BulletBase> _bulletPool;
         [SerializeField] private float _weaponDelay = 0.1f;
         [SerializeField] private float _bulletSpeed = 15f;
         [SerializeField] private bool _automaticFire = true;
         [SerializeField] private bool _stopDelayOnRelease = true;
 
 
-        [Header("Events")] [SerializeField] private UnityEvent onShoot = null!;
+        [Header("Events")] 
+        [SerializeField] private UnityEvent onShoot = null!;
 
-
-        private IPoolingService _poolingService;
+        
         private bool _isShooting;
-        private bool _isInitialized;
         private bool _isReloading;
         private string _bulletPoolId;
         public bool IsShooting => _isShooting;
 
-
-        private async void Start()
-        {
-            _poolingService = ServiceLocator.Instance.GetService<IPoolingService>();
-            await _poolingService.WaitForInitialization();
-            _isInitialized = true;
-            _bulletPoolId = PoolIdConverter.GetId(_bulletPool);
-            Debug.Log("Weapon initialized with pool id: " + _bulletPoolId);
-        }
+        
 
         private void Update()
         {
@@ -49,13 +40,11 @@ namespace Galacron.Actors
 
         public void Shoot()
         {
-            if (!_isInitialized) return;
             _isShooting = true;
         }
 
         public void StopShooting()
         {
-            if (!_isInitialized) return;
             _isShooting = false;
             
             if (!_stopDelayOnRelease) return;
@@ -68,7 +57,8 @@ namespace Galacron.Actors
         {
             var rotation = transform.rotation;
             
-            var bulletGO = _poolingService.GetFromPool(_bulletPoolId, transform.position, rotation);
+            var bulletGO = _bulletPool.Get(transform.position, rotation);
+            if (bulletGO == null) return;
             var bullet = bulletGO.GetComponent<BulletBase>();
             bullet.Velocity = transform.up * _bulletSpeed;
         }

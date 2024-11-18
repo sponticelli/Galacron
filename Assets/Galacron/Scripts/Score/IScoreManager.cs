@@ -7,11 +7,11 @@ namespace Galacron.Score
     public interface IScoreManager
     {
         public IObservable<int> Score { get; }
-        public IObservable<int> HighScore { get; }
+        public IObservable<int> Highscore { get; }
         public void AddPoints(int points);
         public void ResetScore();
-        public void ResetHighScore();
+        public void ResetHighscore();
         public int GetCurrentScore();
-        public int GetHighScore();
+        public int GetHighscore();
     }
 }

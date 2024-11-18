@@ -19,15 +19,15 @@ namespace Galacron.Actors
 
         private int currentWaveIndex;
         private IPoolingService _poolingService;
-        private Dictionary<Pools, PathBase> _paths = new Dictionary<Pools, PathBase>();
+        private Dictionary<int, PathBase> _paths = new Dictionary<int, PathBase>();
         private List<GameObject> _enemies = new List<GameObject>();
 
         [Serializable]
         public class Wave
         {
-            public Pools[] _enemies;
+            public PoolReference<FormationActor>[] _enemies;
             public float spawnInterval = 0.1f;
-            public Pools[] paths;
+            public PoolReference<PathBase>[] paths;
             public int amount;
         }
 
@@ -53,16 +53,16 @@ namespace Galacron.Actors
             _paths.Clear();
             foreach (var wave in waves)
             {
-                foreach (var key in wave.paths)
+                foreach (var pathRef in wave.paths)
                 {
-                    if (_paths.ContainsKey(key)) continue;
-                    Debug.Log($"Spawner: PreparePaths: {key}");
+                   var hash = pathRef.GetHashCode();
                     
-                    var pathGO = _poolingService.GetFromPool(PoolIdConverter.GetId(key), transform.position,
-                        Quaternion.identity);
-                    var path = pathGO.GetComponent<PathBase>();
+                    if (_paths.ContainsKey(hash)) continue;
+                    Debug.Log($"Spawner: PreparePaths: {hash}");
+                    
+                    var path = pathRef.Get(transform.position, Quaternion.identity);
                     path.RecalculatePath();
-                    _paths.Add(key, path);
+                    _paths.Add(hash, path);
                 }
             }
         }
@@ -91,14 +91,12 @@ namespace Galacron.Actors
                 for (int i = 0; i < wave.amount; i++)
                 {
                     var enemy = wave._enemies[i % wave._enemies.Length];
-                    var pathId = wave.paths[i % wave.paths.Length];
+                    var pathId = wave.paths[i % wave.paths.Length].GetHashCode();
                     var path = _paths[pathId];
-                    var enemyGO = _poolingService.GetFromPool(PoolIdConverter.GetId(enemy), transform.position,
-                        Quaternion.identity);
-                    var enemyBehavior = enemyGO.GetComponent<FormationActor>();
+                    var enemyBehavior = enemy.Get(transform.position, Quaternion.identity);
                     enemyBehavior.SpawnSetup(path, formation.enemyList.Count, formation);
                     formation.RegisterEnemy(enemyBehavior);
-                    _enemies.Add(enemyGO);
+                    _enemies.Add(enemyBehavior.gameObject);
 
                     yield return new WaitForSeconds(wave.spawnInterval);
                 }

@@ -34,3 +34,13 @@ MonoBehaviour:
     lifetime: 1
     monoBehaviourPrefab: {fileID: 0}
     configuration: {fileID: 0}
+  - serviceName: FloatingTextFactory
+    interfaceType:
+      typeName: Galacron.FloatingTexts.IFloatingTextFactory, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    implementationType:
+      typeName: Galacron.FloatingTexts.FloatingTextFactory, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    lifetime: 1
+    monoBehaviourPrefab: {fileID: 0}
+    configuration: {fileID: 0}

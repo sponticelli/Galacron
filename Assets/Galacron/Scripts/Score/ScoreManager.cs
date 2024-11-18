@@ -18,7 +18,7 @@ namespace Galacron.Score
         }
     
         public IObservable<int> Score => scoreProperty;
-        public IObservable<int> HighScore => highScoreProperty;
+        public IObservable<int> Highscore => highScoreProperty;
     
         public void AddPoints(int points)
         {
@@ -35,13 +35,13 @@ namespace Galacron.Score
             scoreProperty.Value = 0;
         }
         
-        public void ResetHighScore()
+        public void ResetHighscore()
         {
             highScoreProperty.Value = 0;
         }
     
         public int GetCurrentScore() => scoreProperty.Value;
-        public int GetHighScore() => highScoreProperty.Value;
+        public int GetHighscore() => highScoreProperty.Value;
     }
     
 }

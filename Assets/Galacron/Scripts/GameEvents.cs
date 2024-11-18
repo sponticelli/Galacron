@@ -7,7 +7,7 @@ namespace Galacron
     public static class GameEvents
     {
         public static readonly Subject<EnemyKilledEvent> OnEnemyKilled = 
-            new GameEventSubject<EnemyKilledEvent>("EnemyKilled");
+            new GameEventSubject<EnemyKilledEvent>();
         
  
     }

@@ -26,6 +26,7 @@ namespace Galacron.Actors
         [SerializeField] private float minTimeAfterSpawn = 6f;
         [SerializeField] private float minTimeBetweenDives = 3f;
         [SerializeField] private float maxTimeBetweenDives = 10f;
+        [SerializeField] private List<PoolReference<PathBase>> divePathList = new ();
         
         
         [Header("Events")]
@@ -39,7 +40,7 @@ namespace Galacron.Actors
 
         //DIVING
         private bool canDive;
-        public List<Pools> divePathList = new List<Pools>();
+        
         
         
         
@@ -143,12 +144,8 @@ namespace Galacron.Actors
                     return;
                 }
 
-                GameObject pathGO = _poolingService.GetFromPool(PoolIdConverter.GetId(choosenPath), 
-                    enemy.transform.position, Quaternion.identity);
-                
-
-                var path = pathGO.GetComponent<PathBase>();
-                _divePaths.Add(enemy.EnemyID, pathGO);
+                var path = choosenPath.Get(transform.position, Quaternion.identity);
+                _divePaths.Add(enemy.EnemyID, path.gameObject);
                 path.RecalculatePath(); 
                 enemy.DiveSetup(path);
                 enemyList.RemoveAt(choosenEnemy);

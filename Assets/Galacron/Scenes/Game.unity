@@ -224,7 +224,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc06eb1be21f478b8805f8b1fb8b2f59, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _bulletPool: 9
+  _bulletPool:
+    baseReference:
+      poolId: 
+      prefab: {fileID: 3613037869655021087, guid: 7bf9b40028f094a4f89edba28a7c33d5, type: 3}
   _weaponDelay: 0.2
   _bulletSpeed: 15
   _automaticFire: 1
@@ -481,7 +484,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 08e32b8a662f41ed89e033c7862c3998, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseMovement: {fileID: 0}
+  baseMovement: {fileID: 1972864617}
   gridSizeX: 10
   gridSizeY: 2
   gridOffsetX: 1.25
@@ -489,6 +492,13 @@ MonoBehaviour:
   minTimeAfterSpawn: 6
   minTimeBetweenDives: 3
   maxTimeBetweenDives: 10
+  divePathList:
+  - baseReference:
+      poolId: 
+      prefab: {fileID: 3746953050744664743, guid: 215978bfd0ca140abb664115e1164bb2, type: 3}
+  - baseReference:
+      poolId: 
+      prefab: {fileID: 5907418787384694640, guid: 7d5edaa3f16d049c1b795f50b1413fa3, type: 3}
   onFormationDead:
     m_PersistentCalls:
       m_Calls:
@@ -516,7 +526,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  divePathList: 0300000004000000
   enemyList: []
 --- !u!1 &230462577
 GameObject:
@@ -5902,21 +5911,45 @@ MonoBehaviour:
   spawnWaveInterval: 1
   formation: {fileID: 194267908}
   waves:
-  - _enemies: 00000000
+  - _enemies:
+    - baseReference:
+        poolId: 
+        prefab: {fileID: 2906427794650903631, guid: 1342bb800ba354c5b923cac71e305582, type: 3}
     spawnInterval: 0.1
-    paths: 0500000007000000
+    paths:
+    - baseReference:
+        poolId: 
+        prefab: {fileID: 6331194222847553765, guid: fc4171ee92ecc40d484543fa7e832385, type: 3}
     amount: 5
-  - _enemies: 00000000
+  - _enemies:
+    - baseReference:
+        poolId: 
+        prefab: {fileID: 2906427794650903631, guid: 1342bb800ba354c5b923cac71e305582, type: 3}
     spawnInterval: 0.1
-    paths: 0500000007000000
+    paths:
+    - baseReference:
+        poolId: 
+        prefab: {fileID: 961728488448188001, guid: 34247663a415349f38bdc49ab5c11026, type: 3}
     amount: 5
-  - _enemies: 00000000
+  - _enemies:
+    - baseReference:
+        poolId: 
+        prefab: {fileID: 2906427794650903631, guid: 1342bb800ba354c5b923cac71e305582, type: 3}
     spawnInterval: 0.1
-    paths: 0600000008000000
+    paths:
+    - baseReference:
+        poolId: 
+        prefab: {fileID: 6331194222847553765, guid: fc4171ee92ecc40d484543fa7e832385, type: 3}
     amount: 5
-  - _enemies: 00000000
+  - _enemies:
+    - baseReference:
+        poolId: 
+        prefab: {fileID: 2906427794650903631, guid: 1342bb800ba354c5b923cac71e305582, type: 3}
     spawnInterval: 0.1
-    paths: 0700000005000000
+    paths:
+    - baseReference:
+        poolId: 
+        prefab: {fileID: 961728488448188001, guid: 34247663a415349f38bdc49ab5c11026, type: 3}
     amount: 5
 --- !u!4 &543729056
 Transform:
@@ -5986,6 +6019,13 @@ MonoBehaviour:
   minTimeAfterSpawn: 6
   minTimeBetweenDives: 3
   maxTimeBetweenDives: 10
+  divePathList:
+  - baseReference:
+      poolId: 
+      prefab: {fileID: 3746953050744664743, guid: 215978bfd0ca140abb664115e1164bb2, type: 3}
+  - baseReference:
+      poolId: 
+      prefab: {fileID: 5907418787384694640, guid: 7d5edaa3f16d049c1b795f50b1413fa3, type: 3}
   onFormationDead:
     m_PersistentCalls:
       m_Calls:
@@ -6013,7 +6053,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  divePathList: 0300000004000000
   enemyList: []
 --- !u!1 &747319370
 GameObject:
@@ -6367,21 +6406,45 @@ MonoBehaviour:
   spawnWaveInterval: 1
   formation: {fileID: 599705398}
   waves:
-  - _enemies: 00000000
+  - _enemies:
+    - baseReference:
+        poolId: 
+        prefab: {fileID: 2906427794650903631, guid: 1342bb800ba354c5b923cac71e305582, type: 3}
     spawnInterval: 0.2
-    paths: 05000000
+    paths:
+    - baseReference:
+        poolId: 
+        prefab: {fileID: 8733746416143563677, guid: ac3bedc9d855547d58a16be988c7cd3a, type: 3}
     amount: 5
-  - _enemies: 00000000
+  - _enemies:
+    - baseReference:
+        poolId: 
+        prefab: {fileID: 2906427794650903631, guid: 1342bb800ba354c5b923cac71e305582, type: 3}
     spawnInterval: 0.2
-    paths: 07000000
+    paths:
+    - baseReference:
+        poolId: 
+        prefab: {fileID: 3618222211130682126, guid: f266689d82fe64e0097da1c007ed3484, type: 3}
     amount: 5
-  - _enemies: 00000000
+  - _enemies:
+    - baseReference:
+        poolId: 
+        prefab: {fileID: 2906427794650903631, guid: 1342bb800ba354c5b923cac71e305582, type: 3}
     spawnInterval: 0.2
-    paths: 06000000
+    paths:
+    - baseReference:
+        poolId: 
+        prefab: {fileID: 8733746416143563677, guid: ac3bedc9d855547d58a16be988c7cd3a, type: 3}
     amount: 5
-  - _enemies: 00000000
+  - _enemies:
+    - baseReference:
+        poolId: 
+        prefab: {fileID: 2906427794650903631, guid: 1342bb800ba354c5b923cac71e305582, type: 3}
     spawnInterval: 0.2
-    paths: 08000000
+    paths:
+    - baseReference:
+        poolId: 
+        prefab: {fileID: 3618222211130682126, guid: f266689d82fe64e0097da1c007ed3484, type: 3}
     amount: 5
 --- !u!4 &1006616740
 Transform:
@@ -6720,7 +6783,7 @@ SpriteRenderer:
   m_Size: {x: 100, y: 56.25}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!4 &1203854553
@@ -6859,6 +6922,11 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  _enemyDeathFloatingText:
+    baseReference:
+      poolId: 
+      prefab: {fileID: 5110274197251703325, guid: 289ac1fb11ea849bea5d2273b46c234b, type: 3}
+  _enemyDeathFloatingTextColor: {r: 0.99607843, g: 0.99607843, b: 0.99607843, a: 1}
 --- !u!1 &1492924166
 GameObject:
   m_ObjectHideFlags: 0
@@ -7018,6 +7086,7 @@ GameObject:
   - component: {fileID: 1651571321}
   - component: {fileID: 1651571323}
   - component: {fileID: 1651571322}
+  - component: {fileID: 1651571324}
   m_Layer: 0
   m_Name: HighScoreValue
   m_TagString: Untagged
@@ -7141,6 +7210,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1651571320}
   m_CullTransparentMesh: 1
+--- !u!114 &1651571324
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1651571320}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 51fe40a42eac4c9bb6de005f7906dab1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  highscoreText: {fileID: 1651571322}
 --- !u!1 &1730306856
 GameObject:
   m_ObjectHideFlags: 0

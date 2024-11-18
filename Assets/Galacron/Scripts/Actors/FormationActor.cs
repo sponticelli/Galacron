@@ -90,6 +90,9 @@ namespace Galacron.Actors
             target = componentRegistry.Get<PlayerController>().transform;
             componentRegistry.SubscribeToRegister<PlayerController>(OnPlayerRegistered);
             componentRegistry.SubscribeToDeRegister<PlayerController>(OnPlayerUnregistered);
+            
+            moveToTarget.Stop();
+            
         }
 
         private void OnDisable()
@@ -137,7 +140,6 @@ namespace Galacron.Actors
 
             if (currentState is DiveState)
             {
-                pathToFollow.gameObject.ReturnToPool();
                 pathToFollow = null;
             }
             

@@ -18,11 +18,11 @@ MonoBehaviour:
     initialSize: 10
     maxSize: 338
     autoExpand: 1
-    recycleTimeout: 0
+    recycleTimeout: -1
   - id: FireflyBullet
     prefab: {fileID: 3613037869655021087, guid: b5e1507029ee0412c90dbaa06f7cb30a, type: 3}
     initialSize: 10
-    maxSize: 1713
+    maxSize: 3855
     autoExpand: 1
     recycleTimeout: -1
   - id: EnemyWasp
@@ -71,5 +71,11 @@ MonoBehaviour:
     prefab: {fileID: 4488227567106404267, guid: d95d6a9d96b71443eacef7b859188bfa, type: 3}
     initialSize: 10
     maxSize: 100
+    autoExpand: 1
+    recycleTimeout: -1
+  - id: FX_Points
+    prefab: {fileID: 5110274197251703325, guid: 289ac1fb11ea849bea5d2273b46c234b, type: 3}
+    initialSize: 10
+    maxSize: 225
     autoExpand: 1
     recycleTimeout: -1
