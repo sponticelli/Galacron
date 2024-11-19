@@ -5,8 +5,6 @@ using Galacron.Paths;
 using Nexus.Core.ServiceLocation;
 using Nexus.Pooling;
 using UnityEngine;
-using UnityEngine.Events;
-using Random = UnityEngine.Random;
 
 namespace Galacron.Actors
 {
@@ -45,7 +43,7 @@ namespace Galacron.Actors
                 totalEnemies += wave.amount;
             }
 
-            formation.SetTotalEnemies(totalEnemies);
+            formation.SetTotalMembers(totalEnemies);
         }
 
         private void PreparePaths()
@@ -85,6 +83,7 @@ namespace Galacron.Actors
 
         private IEnumerator SpawnWaves()
         {
+            int totalEnemies = 0;
             while (currentWaveIndex < waves.Length)
             {
                 var wave = waves[currentWaveIndex];
@@ -94,9 +93,10 @@ namespace Galacron.Actors
                     var pathId = wave.paths[i % wave.paths.Length].GetHashCode();
                     var path = _paths[pathId];
                     var enemyBehavior = enemy.Get(transform.position, Quaternion.identity);
-                    enemyBehavior.SpawnSetup(path, formation.enemyList.Count, formation);
-                    formation.RegisterEnemy(enemyBehavior);
+                    enemyBehavior.SpawnSetup(path, totalEnemies, formation);
+                    formation.RegisterMember(enemyBehavior, enemyBehavior.EnemyID);
                     _enemies.Add(enemyBehavior.gameObject);
+                    totalEnemies++;
 
                     yield return new WaitForSeconds(wave.spawnInterval);
                 }

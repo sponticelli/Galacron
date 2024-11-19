@@ -43,10 +43,7 @@ namespace Galacron.Actors
         }
 
         public int EnemyID { get; private set; } = -1;
-        public int InFormationScore;
-        public int NotInFormationScore;
-        public TrailRenderer[] Trails;
-        public GameObject FxExplosion;
+
 
         // Properties for state access
         public MoveToTarget MoveToTarget => moveToTarget;
@@ -133,11 +130,6 @@ namespace Galacron.Actors
 
         public void OnDeath()
         {
-            if (FxExplosion != null)
-            {
-                Instantiate(FxExplosion, transform.position, Quaternion.identity);
-            }
-
             if (currentState is DiveState)
             {
                 pathToFollow = null;
@@ -149,7 +141,7 @@ namespace Galacron.Actors
                 new EnemyKilledEvent(points, transform.position)
             );
 
-            formation.ReportDeath(EnemyID);
+            formation.OnMemberDestroyed(this);
         }
 
         public void OnPathEnd()
@@ -159,7 +151,7 @@ namespace Galacron.Actors
             
             if (currentState is DiveState)
             {
-                formation.OnDiveEnd(EnemyID);
+                formation.OnDiveComplete(EnemyID);
             }
 
             ChangeState(StateType.FlyIn);
@@ -169,7 +161,7 @@ namespace Galacron.Actors
         {
             transform.SetParent(formation.gameObject.transform);
             transform.eulerAngles = Vector3.zero;
-            formation.RegisterEnemy(this);
+            formation.RegisterMember(this, EnemyID);
             ChangeState(StateType.Idle);
             moveToTarget.Stop();
         }

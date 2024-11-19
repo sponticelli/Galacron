@@ -1,9 +1,7 @@
 using System.Collections;
-using Nexus.Core.ServiceLocation;
 using Nexus.Pooling;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.Serialization;
 
 namespace Galacron.Actors
 {

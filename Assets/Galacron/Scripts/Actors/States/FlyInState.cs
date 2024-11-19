@@ -8,7 +8,7 @@ namespace Galacron.Actors.States
         {
             UpdateFireTimer();
             HandleShooting(Actor.Target, Actor.Weapon, Actor.OnFlyInFireSettings);
-            Actor.MoveToTarget.SetTarget(Actor.Formation.GetVector(Actor.EnemyID));
+            Actor.MoveToTarget.SetTarget(Actor.Formation.GetPosition(Actor.EnemyID));
         }
     }
 }

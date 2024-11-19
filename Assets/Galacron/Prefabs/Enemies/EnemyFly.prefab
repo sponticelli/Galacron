@@ -5040,7 +5040,7 @@ GameObject:
   - component: {fileID: 8806387156948267387}
   m_Layer: 8
   m_Name: EnemyFly
-  m_TagString: GameController
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5153,10 +5153,6 @@ MonoBehaviour:
     maxPrecision: 0.5
   pointValue: 50
   divePointValue: 100
-  InFormationScore: 0
-  NotInFormationScore: 0
-  Trails: []
-  FxExplosion: {fileID: 0}
 --- !u!114 &8806387156948267387
 MonoBehaviour:
   m_ObjectHideFlags: 0

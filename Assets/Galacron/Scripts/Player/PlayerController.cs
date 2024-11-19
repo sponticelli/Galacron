@@ -1,6 +1,4 @@
 using Galacron.Actors;
-using Nexus.Core.ServiceLocation;
-using Nexus.Pooling;
 using UnityEngine;
 
 namespace Galacron.Player

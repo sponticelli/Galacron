@@ -7,11 +7,18 @@ namespace Galacron.Actors
     public class Health : MonoBehaviour
     {
         [SerializeField]
-        private int health = 1;
+        private int initialHealth = 1;
 
         public UnityEvent onDeath;
+        public int CurrentHealth => health;
+
+        private int health;
         
-        
+        private void OnEnable()
+        {
+            health = initialHealth;
+        }
+
         public void TakeDamage(int amount)
         {
             health -= amount;
