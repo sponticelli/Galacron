@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 2411124573286892520}
   - component: {fileID: 1513828662814114362}
   m_Layer: 8
-  m_Name: WeaponFly
+  m_Name: Enemy-Weapon-Fly
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

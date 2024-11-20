@@ -9,11 +9,12 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 614189566836310158}
-  - component: {fileID: 4247629715574155700}
+  - component: {fileID: 5690161442429247979}
   - component: {fileID: 1612113913074978981}
+  - component: {fileID: 4247629715574155700}
   - component: {fileID: 2915477710973299323}
   m_Layer: 8
-  m_Name: block2x2
+  m_Name: Enemy-PixelShieldBrick
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -34,6 +35,65 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5690161442429247979
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4518547267177776358}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a93fede02b53453aadc6eb8d67dda3b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spriteRenderer: {fileID: 4247629715574155700}
+  collider2D: {fileID: 2915477710973299323}
+  health: {fileID: 1612113913074978981}
+  healthSprites:
+  - sprites:
+    - {fileID: 21300000, guid: e1671514b6abb405694902db3dc70791, type: 3}
+    - {fileID: 21300000, guid: c5d6802da02864923af1150d778da872, type: 3}
+    - {fileID: 21300000, guid: 015c3053dfc244283a45e1773175b7d5, type: 3}
+    healthPercentage: 0.34
+  - sprites:
+    - {fileID: 21300000, guid: f632208198440476e976f0a267ecca6d, type: 3}
+    - {fileID: 21300000, guid: 1c97ba6b547c9477e9b61b43cf966abc, type: 3}
+    healthPercentage: 0.67
+  - sprites:
+    - {fileID: 21300000, guid: a06bc905952be4297a66e00a84524f63, type: 3}
+    healthPercentage: 1
+--- !u!114 &1612113913074978981
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4518547267177776358}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0d0cbece5721426cb9944a66723642c4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  initialHealth: 3
+  onDeath:
+    m_PersistentCalls:
+      m_Calls: []
+  onDamage:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 5690161442429247979}
+        m_TargetAssemblyTypeName: Galacron.Actors.PixelShieldBrick, Assembly-CSharp
+        m_MethodName: OnDamage
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!212 &4247629715574155700
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -86,22 +146,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &1612113913074978981
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4518547267177776358}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0d0cbece5721426cb9944a66723642c4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  initialHealth: 1
-  onDeath:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!61 &2915477710973299323
 BoxCollider2D:
   m_ObjectHideFlags: 0

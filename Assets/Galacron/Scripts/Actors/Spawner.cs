@@ -29,6 +29,11 @@ namespace Galacron.Actors
             public int amount;
         }
 
+        private void OnEnable()
+        {
+            formation.gameObject.SetActive(true);
+        }
+
 
         private async void Start()
         {
@@ -84,6 +89,7 @@ namespace Galacron.Actors
         private IEnumerator SpawnWaves()
         {
             int totalEnemies = 0;
+            yield return new WaitForSeconds(1f);
             while (currentWaveIndex < waves.Length)
             {
                 var wave = waves[currentWaveIndex];

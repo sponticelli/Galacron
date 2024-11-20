@@ -5039,7 +5039,7 @@ GameObject:
   - component: {fileID: 6323535025117250655}
   - component: {fileID: 8806387156948267387}
   m_Layer: 8
-  m_Name: EnemyFly
+  m_Name: Enemy-Fly
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

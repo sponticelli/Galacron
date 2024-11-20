@@ -13,6 +13,7 @@ namespace Galacron.Sequences
         public override void StartStep()
         {
             base.StartStep();
+            spawner.gameObject.SetActive(true);
             spawner.StartSpawning();
             Complete();
         }

@@ -52,8 +52,6 @@ namespace Galacron.Actors
 
         private void HandleHit(GameObject hitObject, Vector2 hitPoint)
         {
-            Debug.Log($"Bullet hit {hitObject.name} at {hitPoint}");
-
             // If not a shield, check for Health component
             var health = hitObject.GetComponent<Health>();
             if (health != null)

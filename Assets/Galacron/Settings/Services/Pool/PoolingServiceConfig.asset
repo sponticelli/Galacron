@@ -79,3 +79,9 @@ MonoBehaviour:
     maxSize: 225
     autoExpand: 1
     recycleTimeout: -1
+  - id: Enemy_PixelShieldBrick
+    prefab: {fileID: 4518547267177776358, guid: 55f560dce22a6497e92c44a2fb534fc7, type: 3}
+    initialSize: 1000
+    maxSize: 2000
+    autoExpand: 0
+    recycleTimeout: -1

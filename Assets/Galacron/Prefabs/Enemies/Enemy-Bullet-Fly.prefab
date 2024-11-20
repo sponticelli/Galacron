@@ -98,7 +98,7 @@ GameObject:
   - component: {fileID: 5328985387932993382}
   - component: {fileID: -3837901394045230175}
   m_Layer: 10
-  m_Name: BulletFly
+  m_Name: Enemy-Bullet-Fly
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
