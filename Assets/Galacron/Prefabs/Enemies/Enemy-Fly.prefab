@@ -4892,6 +4892,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  rotateToTarget: 1
 --- !u!1 &1690478896846809465
 GameObject:
   m_ObjectHideFlags: 0
@@ -5165,7 +5166,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d0cbece5721426cb9944a66723642c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 1
+  initialHealth: 1
   onDeath:
     m_PersistentCalls:
       m_Calls:
@@ -5193,6 +5194,9 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  onDamage:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &3115092855579364332
 GameObject:
   m_ObjectHideFlags: 0

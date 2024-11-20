@@ -9,6 +9,7 @@ namespace Galacron.Actors
         [SerializeField] private float speed = 2;
         [SerializeField] private Vector3 target;
         [SerializeField] private UnityEvent OnTargetReached;
+        [SerializeField] private bool rotateToTarget;
 
 
         private bool _move;
@@ -39,10 +40,14 @@ namespace Galacron.Actors
             
             objectToMove.position =
                 Vector3.MoveTowards(objectToMove.position, target, speed * Time.deltaTime);
-            //ROTATION OF ENEMY
-            var direction = target - objectToMove.position;
-            var angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg - 90;
-            objectToMove.rotation = Quaternion.Euler(0, 0, angle);
+            
+            if (rotateToTarget)
+            {
+                //ROTATION OF ENEMY
+                var direction = target - objectToMove.position;
+                var angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg - 90;
+                objectToMove.rotation = Quaternion.Euler(0, 0, angle);
+            }
 
             if (Vector3.Distance(objectToMove.position, target) <= 0.001f)
             {

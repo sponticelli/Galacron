@@ -130,6 +130,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 414954537183746392, guid: d57e771b422e346c99940f57fdc37eed, type: 3}
+      propertyPath: orthographic size
+      value: 7.5
+      objectReference: {fileID: 0}
     - target: {fileID: 1285523331771734264, guid: d57e771b422e346c99940f57fdc37eed, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -5269,57 +5273,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &304039138
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 304039139}
-  - component: {fileID: 304039140}
-  m_Layer: 8
-  m_Name: Shield
-  m_TagString: Enemy
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &304039139
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 304039138}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &304039140
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 304039138}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 36ee2ae612c2425b9809912550f7dd03, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  pixelBrickPrefab:
-    baseReference:
-      poolId: 
-      prefab: {fileID: 4518547267177776358, guid: 55f560dce22a6497e92c44a2fb534fc7, type: 3}
-  shieldWidth: 44
-  shieldHeight: 12
-  pixelSize: 0.125
 --- !u!1 &315324829
 GameObject:
   m_ObjectHideFlags: 0
@@ -7341,7 +7294,7 @@ MonoBehaviour:
   - _enemies:
     - baseReference:
         poolId: 
-        prefab: {fileID: 2906427794650903631, guid: 1342bb800ba354c5b923cac71e305582, type: 3}
+        prefab: {fileID: 585208419676541631, guid: 969cb6600c3ab4081af95ca779439a3d, type: 3}
     spawnInterval: 0.2
     paths:
     - baseReference:
@@ -8202,4 +8155,3 @@ SceneRoots:
   - {fileID: 2091757089}
   - {fileID: 230462580}
   - {fileID: 1620757015}
-  - {fileID: 304039139}
