@@ -9,6 +9,9 @@ namespace Galacron.Actors
         private Vector3 velocity;
         [SerializeField]
         private int damage = 1;
+        [SerializeField]
+        private float destructionRadius = 0.5f;
+        
 
         private Rigidbody2D rb;
 
@@ -52,13 +55,11 @@ namespace Galacron.Actors
 
         private void HandleHit(GameObject hitObject, Vector2 hitPoint)
         {
-            // If not a shield, check for Health component
+            // check for Health component
             var health = hitObject.GetComponent<Health>();
             if (health != null)
             {
                 health.TakeDamage(damage);
-                gameObject.ReturnToPool();
-                return;
             }
 
             // If we hit something without either component, still return to pool
@@ -67,7 +68,7 @@ namespace Galacron.Actors
         
         private void OnTriggerEnter2D(Collider2D other)
         {
-            HandleHit(other.gameObject, other.transform.position);
+            HandleHit(other.gameObject, transform.position);
         }
 
         private void OnCollisionEnter2D(Collision2D collision)

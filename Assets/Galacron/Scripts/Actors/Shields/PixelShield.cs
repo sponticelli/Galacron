@@ -1,18 +1,25 @@
+using UnityEngine;
 using System.Collections.Generic;
 using Nexus.Pooling;
-using UnityEngine;
 
 namespace Galacron.Actors
 {
-    public class PixelShield : MonoBehaviour
+    [RequireComponent(typeof(SpriteRenderer))]
+    public partial class PixelShield : MonoBehaviour
     {
-        [SerializeField] private PoolReference<PixelShieldBrick> pixelBrickPrefab;
+        [Header("Shield Configuration")]
         [SerializeField] private ShieldShape shieldShape;
         [SerializeField] private float pixelSize = 0.125f;
         [SerializeField] private bool optimizeColliders = true;
         
+        [Header("Rendering")]
+        [SerializeField] private PoolReference<PixelShieldBrick> pixelBrickPrefab;
+        
         private PixelBlock[,] pixels;
         private HashSet<PixelBlock> exposedPixels = new HashSet<PixelBlock>();
+        private Texture2D previewTexture;
+        private SpriteRenderer previewRenderer;
+        private bool isDirty = false;
 
         public ShieldShape Shape => shieldShape;
         public float PixelSize => pixelSize;
@@ -42,7 +49,6 @@ namespace Galacron.Actors
             {
                 for (int y = 0; y < shieldShape.Height; y++)
                 {
-                    // Skip if this pixel is disabled in the shape
                     if (!shieldShape.GetPixel(x, y)) continue;
 
                     Vector3 pixelPos = startPos + new Vector2(
@@ -59,6 +65,7 @@ namespace Galacron.Actors
                     pixels[x, y] = pixelBlock;
                 }
             }
+            
             if (optimizeColliders) UpdateExposedPixels();
         }
 
@@ -77,35 +84,43 @@ namespace Galacron.Actors
                         exposedPixels.Add(pixels[x, y]);
                         pixels[x, y].SetColliderEnabled(true);
                     }
+                    else
+                    {
+                        pixels[x, y].SetColliderEnabled(false); // Make sure to disable non-exposed pixels
+                    }
                 }
             }
         }
-        
+
         private bool IsExposedPixel(int x, int y)
         {
-            int[] dx = { -1, 0, 1, -1, 1, -1, 0, 1 };
-            int[] dy = { -1, -1, -1, 0, 0, 1, 1, 1 };
+            // All 8 directions: up, up-right, right, down-right, down, down-left, left, up-left
+            int[] dx = { 0, 1, 1, 1, 0, -1, -1, -1 };
+            int[] dy = { 1, 1, 0, -1, -1, -1, 0, 1 };
 
             for (int i = 0; i < 8; i++)
             {
                 int newX = x + dx[i];
                 int newY = y + dy[i];
 
+                // Check if the neighboring position is outside the shield or doesn't have an alive pixel
                 if (newX < 0 || newX >= shieldShape.Width || 
                     newY < 0 || newY >= shieldShape.Height ||
                     !shieldShape.GetPixel(newX, newY) || 
-                    pixels[newX, newY] == null || !pixels[newX, newY].IsAlive())
+                    pixels[newX, newY] == null || 
+                    !pixels[newX, newY].IsAlive())
                 {
-                    return true;
+                    return true; // This pixel is exposed
                 }
             }
 
-            return false;
+            return false; // This pixel is surrounded by other pixels
         }
-        
+
         public void OnPixelDestroyed(PixelBlock pixel)
         {
             exposedPixels.Remove(pixel);
+            isDirty = true;
 
             if (optimizeColliders)
             {
