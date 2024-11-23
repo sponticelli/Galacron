@@ -80,5 +80,10 @@ namespace Galacron.Actors
 
             return null;
         }
+
+        public void SetColor(Color color)
+        {
+            spriteRenderer.color = color;
+        }
     }
 }

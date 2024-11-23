@@ -37,5 +37,11 @@ namespace Galacron.Actors
                 onDamage?.Invoke((float)health / initialHealth);
             }
         }
+
+        public void Revive()
+        {
+            health = initialHealth;
+            onDamage?.Invoke(1f);
+        }
     }
 }
