@@ -42,7 +42,7 @@ namespace Galacron.Actors
         public void SetWorldPosition(Vector2 newPosition)
         {
             _worldPosition = newPosition;
-            if (_brick != null)
+            if (_brick != null && _brick.gameObject != null)
             {
                 _brick.transform.position = _worldPosition;
             }
@@ -52,7 +52,7 @@ namespace Galacron.Actors
         {
             x = newX;
             y = newY;
-            if (_brick != null)
+            if (_brick != null && _brick.gameObject != null)
             {
                 _brick.name = $"Pixel_{x}_{y}";
             }

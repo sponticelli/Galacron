@@ -11,12 +11,11 @@ namespace Galacron.Actors
         [SerializeField] private float pixelSize = 0.125f;
         [SerializeField] private bool optimizeColliders = true;
 
-        [Header("Scrolling Configuration")] 
+        [Header("Scrolling Configuration")]
         [SerializeField] private float scrollSpeed = 1f;
         [SerializeField] private bool enableScrolling = false;
 
-        [Header("Rendering")] 
-        [SerializeField] private PoolReference<PixelShieldBrick> pixelBrickPrefab;
+        [Header("Rendering")] [SerializeField] private PoolReference<PixelShieldBrick> pixelBrickPrefab;
 
         private PixelBlock[,] pixels;
         private HashSet<PixelBlock> exposedPixels = new HashSet<PixelBlock>();
@@ -24,9 +23,34 @@ namespace Galacron.Actors
         private Vector3 lastPosition;
         private Vector2 shieldCenter;
         private bool isInitialized = false;
-        
+
         public ShieldShape Shape => shieldShape;
         public float PixelSize => pixelSize;
+
+
+        private struct Vector2Int
+        {
+            public int x;
+            public int y;
+
+            public Vector2Int(int x, int y)
+            {
+                this.x = x;
+                this.y = y;
+            }
+
+            public override bool Equals(object obj)
+            {
+                if (!(obj is Vector2Int)) return false;
+                Vector2Int other = (Vector2Int)obj;
+                return x == other.x && y == other.y;
+            }
+
+            public override int GetHashCode()
+            {
+                return x.GetHashCode() ^ (y.GetHashCode() << 2);
+            }
+        }
 
         private void OnEnable()
         {
@@ -39,6 +63,7 @@ namespace Galacron.Actors
             {
                 RebuildShield();
             }
+
             lastPosition = transform.position;
         }
 
@@ -51,41 +76,40 @@ namespace Galacron.Actors
                 lastPosition = transform.position;
             }
         }
-        
+
 
         private void ScrollPixels(Vector3 parentDelta)
         {
             float scrollAmount = scrollSpeed * Time.deltaTime;
-            shieldCenter = transform.position;
             float width = shieldShape.Width * pixelSize;
             float halfWidth = width / 2f;
 
-            // Update all pixel positions
+            // First move all pixels with parent
             for (int x = 0; x < shieldShape.Width; x++)
             {
                 for (int y = 0; y < shieldShape.Height; y++)
                 {
                     if (pixels[x, y] == null || !pixels[x, y].IsAlive()) continue;
-
-                    // Get the pixel's position relative to the shield before scrolling
-                    Vector2 relativePos = pixels[x, y].WorldPosition - (Vector2)(transform.position - parentDelta);
-
-                    // Apply scrolling
-                    relativePos.x += scrollAmount;
-
-                    // Wrap position if necessary
-                    if (relativePos.x > halfWidth)
+            
+                    // Move with parent
+                    Vector2 newPos = pixels[x, y].WorldPosition + (Vector2)parentDelta;
+                    pixels[x, y].SetWorldPosition(newPos);
+            
+                    // Then apply scrolling offset
+                    Vector2 localPos = pixels[x, y].WorldPosition - (Vector2)transform.position;
+                    localPos.x += scrollAmount;
+            
+                    // Wrap around if needed
+                    if (localPos.x > halfWidth)
                     {
-                        relativePos.x = -halfWidth + (relativePos.x - halfWidth);
+                        localPos.x = -halfWidth + (localPos.x - halfWidth);
                     }
-                    else if (relativePos.x < -halfWidth)
+                    else if (localPos.x < -halfWidth)
                     {
-                        relativePos.x = halfWidth - (-halfWidth - relativePos.x);
+                        localPos.x = halfWidth + (localPos.x + halfWidth);
                     }
-
-                    // Update the pixel's world position
-                    Vector2 newWorldPos = (Vector2)transform.position + relativePos;
-                    pixels[x, y].SetWorldPosition(newWorldPos);
+            
+                    pixels[x, y].SetWorldPosition((Vector2)transform.position + localPos);
                 }
             }
 
@@ -96,8 +120,8 @@ namespace Galacron.Actors
         private void UpdatePixelGrid()
         {
             PixelBlock[,] newGrid = new PixelBlock[shieldShape.Width, shieldShape.Height];
-            float halfWidth = (shieldShape.Width * pixelSize) / 2f;
-            float halfHeight = (shieldShape.Height * pixelSize) / 2f;
+            float width = shieldShape.Width * pixelSize;
+            float halfWidth = width / 2f;
 
             for (int x = 0; x < shieldShape.Width; x++)
             {
@@ -105,15 +129,33 @@ namespace Galacron.Actors
                 {
                     if (pixels[x, y] == null || !pixels[x, y].IsAlive()) continue;
 
-                    // Calculate position relative to shield center
-                    Vector2 relativePos = pixels[x, y].WorldPosition - (Vector2)transform.position;
-
-                    // Convert to grid coordinates
-                    int newX = Mathf.RoundToInt((relativePos.x + halfWidth) / pixelSize - 0.5f);
+                    // Calculate local position relative to shield center
+                    Vector2 localPos = pixels[x, y].WorldPosition - (Vector2)transform.position;
+            
+                    // Calculate grid position
+                    int newX = Mathf.RoundToInt((localPos.x + halfWidth) / pixelSize);
+                    // Ensure proper wrapping
                     newX = WrapIndex(newX, shieldShape.Width);
-
-                    // Update pixel's grid position
+            
+                    // Update grid position
                     pixels[x, y].UpdateGridPosition(newX, y);
+            
+                    // If position is already occupied, adjust position slightly
+                    if (newGrid[newX, y] != null)
+                    {
+                        // Find next available x position
+                        for (int offset = 1; offset < shieldShape.Width; offset++)
+                        {
+                            int rightX = WrapIndex(newX + offset, shieldShape.Width);
+                            if (newGrid[rightX, y] == null)
+                            {
+                                newX = rightX;
+                                pixels[x, y].UpdateGridPosition(newX, y);
+                                break;
+                            }
+                        }
+                    }
+            
                     newGrid[newX, y] = pixels[x, y];
                 }
             }
@@ -122,10 +164,10 @@ namespace Galacron.Actors
             if (optimizeColliders) UpdateExposedPixels();
         }
 
-
         private int WrapIndex(int index, int max)
         {
-            return ((index % max) + max) % max;
+            index = index % max;
+            return index < 0 ? index + max : index;
         }
 
         private void RebuildShield()
@@ -146,13 +188,14 @@ namespace Galacron.Actors
                             pixel.name = $"Pixel_{x}_{y}";
                             pixelBlock.Brick = pixel;
                         }
+
                         pixelBlock.SetColliderEnabled(!optimizeColliders);
                         pixelBlock.Revive();
                     }
                 }
             }
+
             if (optimizeColliders) UpdateExposedPixels();
-            
         }
 
         private void BuildShield()
@@ -188,7 +231,7 @@ namespace Galacron.Actors
                     var pixel = pixelBrickPrefab.Get(pixelPos, Quaternion.identity);
                     pixel.transform.parent = transform; // Set parent directly
                     pixel.name = $"Pixel_{x}_{y}";
-                    
+
                     activeBricks.Add(pixel);
 
                     var pixelBlock = new PixelBlock(this, pixel, x, y);

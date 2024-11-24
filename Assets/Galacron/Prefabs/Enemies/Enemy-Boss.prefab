@@ -57,7 +57,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3470868973972981732}
   - component: {fileID: 5757213688835604145}
-  - component: {fileID: 4272579766763281027}
+  - component: {fileID: 4193733844492914221}
   m_Layer: 8
   m_Name: Enemy-Boss
   m_TagString: Enemy
@@ -85,6 +85,7 @@ Transform:
   - {fileID: 8887773935140666073}
   - {fileID: 7292738277288076310}
   - {fileID: 4218289176000772829}
+  - {fileID: 928711010777772249}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &5757213688835604145
@@ -129,7 +130,7 @@ MonoBehaviour:
     maxPrecision: 0.5
   pointValue: 50
   divePointValue: 100
---- !u!114 &4272579766763281027
+--- !u!114 &4193733844492914221
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -138,10 +139,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 585208419676541631}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0d0cbece5721426cb9944a66723642c4, type: 3}
+  m_Script: {fileID: 11500000, guid: 8c58cb578c0f416eac2df03139ce88b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  initialHealth: 20
+  formationActor: {fileID: 5757213688835604145}
+  pilotSpawnPoint: {fileID: 928711010777772249}
+  pilotPrefab:
+    baseReference:
+      poolId: 
+      prefab: {fileID: 8826347394104763463, guid: 26d51c22a4e354e16935fb4e90ee2d8e, type: 3}
   onDeath:
     m_PersistentCalls:
       m_Calls:
@@ -213,6 +219,37 @@ MonoBehaviour:
     baseReference:
       poolId: 
       prefab: {fileID: 4518547267177776358, guid: 55f560dce22a6497e92c44a2fb534fc7, type: 3}
+--- !u!1 &2471269547329432667
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 928711010777772249}
+  m_Layer: 0
+  m_Name: Pilot-Place
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &928711010777772249
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2471269547329432667}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: -0.637, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3470868973972981732}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4265150517658221298
 GameObject:
   m_ObjectHideFlags: 0

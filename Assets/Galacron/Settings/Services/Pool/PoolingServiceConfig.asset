@@ -91,3 +91,9 @@ MonoBehaviour:
     maxSize: 1
     autoExpand: 1
     recycleTimeout: -1
+  - id: Enemy_Boss_Pilot
+    prefab: {fileID: 8826347394104763463, guid: 26d51c22a4e354e16935fb4e90ee2d8e, type: 3}
+    initialSize: 0
+    maxSize: 1
+    autoExpand: 1
+    recycleTimeout: -1
