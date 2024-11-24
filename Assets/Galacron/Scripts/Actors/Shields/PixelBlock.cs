@@ -84,12 +84,13 @@ namespace Galacron.Actors
             {
                 _health.onDeath.RemoveListener(OnPixelDestroyed);
             }
-            
+        
             if (_brick != null && _brick.gameObject != null)
             {
                 _brick.gameObject.ReturnToPool();
             }
-            
+        
+            _isDestroyed = false; // Reset destroyed state
             _brick = null;
             _health = null;
             _shield = null;

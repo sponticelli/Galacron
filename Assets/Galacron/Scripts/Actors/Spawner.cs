@@ -41,7 +41,7 @@ namespace Galacron.Actors
             await _poolingService.WaitForInitialization();
             PreparePaths();
 
-            // CAlculate total amount of enemies
+            // Calculate total amount of enemies
             int totalEnemies = 0;
             foreach (var wave in waves)
             {
@@ -89,6 +89,7 @@ namespace Galacron.Actors
         private IEnumerator SpawnWaves()
         {
             int totalEnemies = 0;
+            currentWaveIndex = 0;
             yield return new WaitForSeconds(1f);
             while (currentWaveIndex < waves.Length)
             {

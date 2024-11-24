@@ -54,17 +54,21 @@ namespace Galacron.Actors
 
         private void OnEnable()
         {
-            if (!isInitialized && shieldShape != null)
+            // Always do a fresh build when enabled
+            if (shieldShape != null)
             {
+                CleanupShield();
                 BuildShield();
                 isInitialized = true;
             }
-            else if (isInitialized)
-            {
-                RebuildShield();
-            }
 
             lastPosition = transform.position;
+        }
+        
+        private void OnDisable()
+        {
+            isInitialized = false; // Reset initialization state
+            Debug.Log("Shield disabled");
         }
 
         private void Update()
@@ -198,20 +202,37 @@ namespace Galacron.Actors
             if (optimizeColliders) UpdateExposedPixels();
         }
 
-        private void BuildShield()
+        private void CleanupShield()
         {
-            // Clean up any existing bricks first
-            foreach (Transform child in transform)
+            if (pixels != null)
             {
-                if (child.GetComponent<PixelShieldBrick>() != null)
+                for (int x = 0; x < shieldShape.Width; x++)
                 {
-                    child.gameObject.ReturnToPool();
+                    for (int y = 0; y < shieldShape.Height; y++)
+                    {
+                        if (pixels[x, y] != null)
+                        {
+                            pixels[x, y].Cleanup();
+                            pixels[x, y] = null;
+                        }
+                    }
                 }
             }
+
+            exposedPixels.Clear();
+            activeBricks.Clear();
+            pixels = null;
+        }
+        
+        private void BuildShield()
+        {
+            // Clean up any existing state first
+            CleanupShield();
 
             pixels = new PixelBlock[shieldShape.Width, shieldShape.Height];
             shieldCenter = transform.position;
             activeBricks.Clear();
+            exposedPixels.Clear();
 
             float halfWidth = (shieldShape.Width * pixelSize) / 2f;
             float halfHeight = (shieldShape.Height * pixelSize) / 2f;
@@ -229,7 +250,7 @@ namespace Galacron.Actors
                     );
 
                     var pixel = pixelBrickPrefab.Get(pixelPos, Quaternion.identity);
-                    pixel.transform.parent = transform; // Set parent directly
+                    pixel.transform.parent = transform;
                     pixel.name = $"Pixel_{x}_{y}";
 
                     activeBricks.Add(pixel);

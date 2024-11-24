@@ -6,17 +6,22 @@ using UnityEngine.Events;
 using Nexus.Core.Rx;
 using Nexus.Core.Rx.Unity;
 using Nexus.Pooling;
+using Nexus.Sequences;
 
 namespace Galacron
 {
     public class GameManager : ObservableMonoBehaviour
     {
-        [Header("Events")]
-        [SerializeField] private UnityEvent onGameStart;
-
-        [Header("Fòating Text")]
+        [Header("Flòating Text")]
         [SerializeField] private PoolReference<FloatingText> _enemyDeathFloatingText;
         [SerializeField] private Color _enemyDeathFloatingTextColor;
+        
+        [Header("Wave Sequence")]
+        [SerializeField] private Sequence _waveSequence;
+        
+        [Header("Events")]
+        [SerializeField] private UnityEvent onGameStart;
+        
         
         private IScoreManager _scoreManager;
         private IFloatingTextFactory _floatingTextFactory;
@@ -52,7 +57,11 @@ namespace Galacron
             
             // TODO Register the event to FloatingTextManager
 
+            _waveSequence.Context.SetData<GameData>(new GameData());
+            
             Debug.Log("Game Manager Initialized");
+            
+            
             onGameStart.Invoke();
         }
         

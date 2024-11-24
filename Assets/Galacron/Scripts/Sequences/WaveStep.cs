@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Galacron.Sequences
 {
-    public class WaveStep : BaseStep
+    public class WaveStep : BaseStepWithContext
     {
         [Header("References")]
         [SerializeField] private Spawner spawner;
